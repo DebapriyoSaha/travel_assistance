@@ -5,7 +5,6 @@ import requests
 import os
 # from serpapi import GoogleSearch 
 from dotenv import load_dotenv
-load_dotenv()
 from urllib.parse import quote
 from agno.agent import Agent
 from langchain.agents import Tool
@@ -13,7 +12,8 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from agno.models.google import Gemini
 from datetime import datetime
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+load_dotenv()
+
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 tavily_tool = TavilySearchResults(tavily_api_key=TAVILY_API_KEY)
