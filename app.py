@@ -207,6 +207,11 @@ activity_preferences = st.text_area(
 departure_date = st.date_input("Departure Date")
 return_date = st.date_input("Return Date")
 
+if departure_date == return_date:
+    st.error("❌ Departure and return date cannot be the same.")
+elif departure_date > return_date:
+    st.error("❌ Departure date cannot be after the return date.")
+
 # Sidebar Setup
 st.sidebar.title("🌎 Travel Assistant")
 st.sidebar.subheader("Personalize Your Trip")
