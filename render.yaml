@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: travel-assistance
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.headless true --server.port $PORT
+    envVars:
+      - key: TAVILY_API_KEY
+        sync: false
