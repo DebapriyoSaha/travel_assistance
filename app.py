@@ -10,7 +10,7 @@ from agno.agent import Agent
 from langchain.agents import Tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 from agno.models.google import Gemini
-from datetime import datetime
+from datetime import date, timedelta, datetime
 
 load_dotenv()
 
@@ -165,7 +165,6 @@ destination_option = st.selectbox("🛬 Destination City:", airport_options, ind
 source = source_option.split("(")[-1][:-1]
 destination = destination_option.split("(")[-1][:-1]
 
-
 st.markdown("### 📅 Plan Your Adventure")
 num_days = st.slider("🕒 Trip Duration (days):", 1, 14, 5)
 travel_theme = st.selectbox(
@@ -204,13 +203,23 @@ activity_preferences = st.text_area(
     "Relaxing on the beach, exploring historical sites"
 )
 
-departure_date = st.date_input("Departure Date")
-return_date = st.date_input("Return Date")
+# Default values
+default_departure = date.today() + timedelta(days=1)
+default_return = date.today() + timedelta(days=5)
+
+# Date inputs with defaults
+departure_date = st.date_input("Departure Date", value=default_departure, min_value=date.today())
+return_date = st.date_input("Return Date", value=default_return, min_value=date.today())
+
+# Validation flags
+dates_valid = True
 
 if departure_date == return_date:
     st.error("❌ Departure and return date cannot be the same.")
+    dates_valid = False
 elif departure_date > return_date:
     st.error("❌ Departure date cannot be after the return date.")
+    dates_valid = False
 
 # Sidebar Setup
 st.sidebar.title("🌎 Travel Assistant")
@@ -360,154 +369,157 @@ hotel_restaurant_finder = Agent(
     add_datetime_to_instructions=True,
 )
 
-# Generate Travel Plan
-if st.button("🚀 Generate Travel Plan"):
-    with st.spinner("✈️ Fetching best flight options..."):
-        flight_data = fetch_flights(source, destination, departure_date, return_date,flight_class)
-        cheapest_flights = extract_cheapest_flights(flight_data)
+if dates_valid:
+    # Generate Travel Plan
+    if st.button("🚀 Generate Travel Plan"):
+        with st.spinner("✈️ Fetching best flight options..."):
+            flight_data = fetch_flights(source, destination, departure_date, return_date,flight_class)
+            cheapest_flights = extract_cheapest_flights(flight_data)
 
-    # AI Processing
-    with st.spinner("🔍 Researching best attractions & activities..."):
-        research_prompt = (
-            f"Research the best attractions and activities in {destination} for a {num_days}-day {travel_theme.lower()} trip. "
-            f"The traveler enjoys: {activity_preferences}. Budget: {budget}. Flight Class: {flight_class}. "
-            f"Hotel Rating: {hotel_rating}. Visa Requirement: {visa_required}. Travel Insurance: {travel_insurance}."
-        )
-        research_results = researcher.run(research_prompt, stream=False)
+        # AI Processing
+        with st.spinner("🔍 Researching best attractions & activities..."):
+            research_prompt = (
+                f"Research the best attractions and activities in {destination} for a {num_days}-day {travel_theme.lower()} trip. "
+                f"The traveler enjoys: {activity_preferences}. Budget: {budget}. Flight Class: {flight_class}. "
+                f"Hotel Rating: {hotel_rating}. Visa Requirement: {visa_required}. Travel Insurance: {travel_insurance}."
+            )
+            research_results = researcher.run(research_prompt, stream=False)
 
-    with st.spinner("🏨 Searching for hotels & restaurants..."):
-        hotel_restaurant_prompt = (
-            f"Find the best hotels and restaurants near popular attractions in {destination} for a {travel_theme.lower()} trip. "
-            f"Budget: {budget}. Hotel Rating: {hotel_rating}. Preferred activities: {activity_preferences}."
-        )
-        hotel_restaurant_results = hotel_restaurant_finder.run(hotel_restaurant_prompt, stream=False)
+        with st.spinner("🏨 Searching for hotels & restaurants..."):
+            hotel_restaurant_prompt = (
+                f"Find the best hotels and restaurants near popular attractions in {destination} for a {travel_theme.lower()} trip. "
+                f"Budget: {budget}. Hotel Rating: {hotel_rating}. Preferred activities: {activity_preferences}."
+            )
+            hotel_restaurant_results = hotel_restaurant_finder.run(hotel_restaurant_prompt, stream=False)
 
-    with st.spinner("🗺️ Creating your personalized itinerary..."):
-        planning_prompt = (
-            f"Based on the following data, create a {num_days}-day itinerary for a {travel_theme.lower()} trip to {destination}. "
-            f"The traveler enjoys: {activity_preferences}. Budget: {budget}. Flight Class: {flight_class}. Hotel Rating: {hotel_rating}. "
-            f"Visa Requirement: {visa_required}. Travel Insurance: {travel_insurance}. Research: {research_results.content}. "
-            f"Flights: {json.dumps(cheapest_flights)}. Hotels & Restaurants: {hotel_restaurant_results.content}."
-        )
-        itinerary = planner.run(planning_prompt, stream=False)
+        with st.spinner("🗺️ Creating your personalized itinerary..."):
+            planning_prompt = (
+                f"Based on the following data, create a {num_days}-day itinerary for a {travel_theme.lower()} trip to {destination}. "
+                f"The traveler enjoys: {activity_preferences}. Budget: {budget}. Flight Class: {flight_class}. Hotel Rating: {hotel_rating}. "
+                f"Visa Requirement: {visa_required}. Travel Insurance: {travel_insurance}. Research: {research_results.content}. "
+                f"Flights: {json.dumps(cheapest_flights)}. Hotels & Restaurants: {hotel_restaurant_results.content}."
+            )
+            itinerary = planner.run(planning_prompt, stream=False)
 
-    # Display Results
-    st.subheader("✈️ Cheapest Flight Options")
-    if cheapest_flights:
-        cols = st.columns(len(cheapest_flights))
-        for idx, flight in enumerate(cheapest_flights):
-            with cols[idx]:
-                # General info
-                price = flight.get('price', {}).get('raw', 0)
-                formatted_price = flight.get('price', {}).get('formatted', '₹0')
-                
-                onward = flight.get('legs', [])[0]
-                ret = flight.get('legs', [])[1]
+        # Display Results
+        st.subheader("✈️ Cheapest Flight Options")
+        if cheapest_flights:
+            cols = st.columns(len(cheapest_flights))
+            for idx, flight in enumerate(cheapest_flights):
+                with cols[idx]:
+                    # General info
+                    price = flight.get('price', {}).get('raw', 0)
+                    formatted_price = flight.get('price', {}).get('formatted', '₹0')
+                    
+                    onward = flight.get('legs', [])[0]
+                    ret = flight.get('legs', [])[1]
 
-                # Airline details (assuming same for both legs)
-                airline_name = onward.get('carriers', {}).get('marketing', [{}])[0].get('name', 'Unknown Airline')
-                flight_code = onward.get('carriers', {}).get('marketing', [{}])[0].get('alternateId', 'N/A').upper()
-                airline_logo = onward.get('carriers', {}).get('marketing', [{}])[0].get('logoUrl', '')
+                    # Airline details (assuming same for both legs)
+                    airline_name = onward.get('carriers', {}).get('marketing', [{}])[0].get('name', 'Unknown Airline')
+                    flight_code = onward.get('carriers', {}).get('marketing', [{}])[0].get('alternateId', 'N/A').upper()
+                    airline_logo = onward.get('carriers', {}).get('marketing', [{}])[0].get('logoUrl', '')
 
-                # Onward flight details
-                departure_city = onward.get('origin', {}).get('city', 'Unknown')
-                arrival_city = onward.get('destination', {}).get('city', 'Unknown')
-                origin_code = onward.get('origin', {}).get('displayCode', 'N/A')
-                dest_code = onward.get('destination', {}).get('displayCode', 'N/A')
-                departure_time = format_datetime(onward.get('departure', ''))
-                arrival_time = format_datetime(onward.get('arrival', ''))
-                flight_duration = f"{onward.get('durationInMinutes', 0)} mins"
+                    # Onward flight details
+                    departure_city = onward.get('origin', {}).get('city', 'Unknown')
+                    arrival_city = onward.get('destination', {}).get('city', 'Unknown')
+                    origin_code = onward.get('origin', {}).get('displayCode', 'N/A')
+                    dest_code = onward.get('destination', {}).get('displayCode', 'N/A')
+                    departure_time = format_datetime(onward.get('departure', ''))
+                    arrival_time = format_datetime(onward.get('arrival', ''))
+                    flight_duration = f"{onward.get('durationInMinutes', 0)} mins"
 
-                # Return flight details
-                return_departure_city = ret.get('origin', {}).get('city', 'Unknown')
-                return_arrival_city = ret.get('destination', {}).get('city', 'Unknown')
-                return_departure_code = ret.get('origin', {}).get('displayCode', 'N/A')
-                return_arrival_code = ret.get('destination', {}).get('displayCode', 'N/A')
-                return_departure_time = format_datetime(ret.get('departure', ''))
-                return_arrival_time = format_datetime(ret.get('arrival', ''))
-                return_duration = f"{ret.get('durationInMinutes', 0)} mins"
+                    # Return flight details
+                    return_departure_city = ret.get('origin', {}).get('city', 'Unknown')
+                    return_arrival_city = ret.get('destination', {}).get('city', 'Unknown')
+                    return_departure_code = ret.get('origin', {}).get('displayCode', 'N/A')
+                    return_arrival_code = ret.get('destination', {}).get('displayCode', 'N/A')
+                    return_departure_time = format_datetime(ret.get('departure', ''))
+                    return_arrival_time = format_datetime(ret.get('arrival', ''))
+                    return_duration = f"{ret.get('durationInMinutes', 0)} mins"
 
-                booking_link = generate_booking_link(
-                origin_code,
-                dest_code,
-                onward.get('departure', ''),
-                return_date=ret.get('departure', ''),
-                flight_class="economy"
-                )
-  
-                st.markdown(
-                        f"""
-                        <div style="
-                            border-radius: 10px;
-                            padding: 12px;
-                            background-color: #f8f9fa;
-                            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                            font-family: 'Segoe UI', sans-serif;
-                            color: #212529;
-                            margin: 10px auto;
-                            border: 1px solid #dee2e6;
-                            max-width: 500px;
-                        ">
-                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
-                                <img src="{airline_logo}" alt="{airline_name} Logo" width="40" style="flex-shrink: 0;" />
-                                <div style="text-align: center;">
-                                    <h3 style="margin: 0; color: #343a40; font-size: 16px; line-height: 1.2;">{airline_name}</h3>
-                                    <p style="color: #6c757d; font-size: 11px; margin: 2px 0 0 0;">Flight: <strong>{flight_code}</strong></p>
-                                </div>
-                            </div>
-                            <hr style="border: none; border-top: 1px solid #dee2e6; margin: 10px auto; width: 90%;" />
-                            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                                <div style="text-align: left; min-width: 180px;">
-                                    <h4 style="color: #007bff; margin: 6px 0; font-size: 14px;">🛫 Onward</h4>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>From:</strong> {departure_city} ({origin_code})</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>To:</strong> {arrival_city} ({dest_code})</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Depart:</strong> {departure_time}</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Arrive:</strong> {arrival_time}</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Duration:</strong> {flight_duration}</p>
-                                </div>
-                                <div style="text-align: left; min-width: 180px;">
-                                    <h4 style="color: #17a2b8; margin: 6px 0; font-size: 14px;">🔁 Return</h4>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>From:</strong> {arrival_city} ({dest_code})</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>To:</strong> {departure_city} ({origin_code})</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Depart:</strong> {return_departure_time}</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Arrive:</strong> {return_arrival_time}</p>
-                                    <p style="margin: 4px 0; font-size: 12px;"><strong>Duration:</strong> {return_duration}</p>
-                                </div>
-                            </div>
-                            <div style="text-align: center; margin-top: 12px;">
-                                <div style="display: inline-block; background: #e8f4ff; padding: 6px 12px; border-radius: 20px;">
-                                    <span style="color: #28a745; font-size: 18px; font-weight: bold;">₹{price:,.0f}</span>
-                                </div>
-                                <div style="margin-top: 8px;">
-                                    <a href="{booking_link}" target="_blank" style="
-                                        background-color: #007bff;
-                                        color: white;
-                                        padding: 6px 16px;
-                                        text-decoration: none;
-                                        border-radius: 20px;
-                                        font-weight: bold;
-                                        font-size: 12px;
-                                        transition: background-color 0.2s;
-                                        display: inline-block;
-                                    "onmouseover="this.style.backgroundColor='#0069d9'" 
-                                    onmouseout="this.style.backgroundColor='#007bff'">Book Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        """, 
-                        unsafe_allow_html=True
+                    booking_link = generate_booking_link(
+                    origin_code,
+                    dest_code,
+                    onward.get('departure', ''),
+                    return_date=ret.get('departure', ''),
+                    flight_class="economy"
                     )
+    
+                    st.markdown(
+                            f"""
+                            <div style="
+                                border-radius: 10px;
+                                padding: 12px;
+                                background-color: #f8f9fa;
+                                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                                font-family: 'Segoe UI', sans-serif;
+                                color: #212529;
+                                margin: 10px auto;
+                                border: 1px solid #dee2e6;
+                                max-width: 500px;
+                            ">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+                                    <img src="{airline_logo}" alt="{airline_name} Logo" width="40" style="flex-shrink: 0;" />
+                                    <div style="text-align: center;">
+                                        <h3 style="margin: 0; color: #343a40; font-size: 16px; line-height: 1.2;">{airline_name}</h3>
+                                        <p style="color: #6c757d; font-size: 11px; margin: 2px 0 0 0;">Flight: <strong>{flight_code}</strong></p>
+                                    </div>
+                                </div>
+                                <hr style="border: none; border-top: 1px solid #dee2e6; margin: 10px auto; width: 90%;" />
+                                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                                    <div style="text-align: left; min-width: 180px;">
+                                        <h4 style="color: #007bff; margin: 6px 0; font-size: 14px;">🛫 Onward</h4>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>From:</strong> {departure_city} ({origin_code})</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>To:</strong> {arrival_city} ({dest_code})</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Depart:</strong> {departure_time}</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Arrive:</strong> {arrival_time}</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Duration:</strong> {flight_duration}</p>
+                                    </div>
+                                    <div style="text-align: left; min-width: 180px;">
+                                        <h4 style="color: #17a2b8; margin: 6px 0; font-size: 14px;">🔁 Return</h4>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>From:</strong> {arrival_city} ({dest_code})</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>To:</strong> {departure_city} ({origin_code})</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Depart:</strong> {return_departure_time}</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Arrive:</strong> {return_arrival_time}</p>
+                                        <p style="margin: 4px 0; font-size: 12px;"><strong>Duration:</strong> {return_duration}</p>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; margin-top: 12px;">
+                                    <div style="display: inline-block; background: #e8f4ff; padding: 6px 12px; border-radius: 20px;">
+                                        <span style="color: #28a745; font-size: 18px; font-weight: bold;">₹{price:,.0f}</span>
+                                    </div>
+                                    <div style="margin-top: 8px;">
+                                        <a href="{booking_link}" target="_blank" style="
+                                            background-color: #007bff;
+                                            color: white;
+                                            padding: 6px 16px;
+                                            text-decoration: none;
+                                            border-radius: 20px;
+                                            font-weight: bold;
+                                            font-size: 12px;
+                                            transition: background-color 0.2s;
+                                            display: inline-block;
+                                        "onmouseover="this.style.backgroundColor='#0069d9'" 
+                                        onmouseout="this.style.backgroundColor='#007bff'">Book Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            """, 
+                            unsafe_allow_html=True
+                        )
 
 
 
-    else:
-        st.warning("⚠️ No flights found.")
+        else:
+            st.warning("⚠️ No flights found.")
 
 
-    st.subheader("🏨 Hotels & Restaurants")
-    st.write(hotel_restaurant_results.content)
+        st.subheader("🏨 Hotels & Restaurants")
+        st.write(hotel_restaurant_results.content)
 
-    st.subheader("🗺️ Your Personalized Itinerary")
-    st.write(itinerary.content)
+        st.subheader("🗺️ Your Personalized Itinerary")
+        st.write(itinerary.content)
 
-    st.success("✅ Travel plan generated successfully!")
+        st.success("✅ Travel plan generated successfully!")
+else:
+    st.warning("⚠️ Please correct the date errors before generating the travel plan.")        
