@@ -7,3 +7,5 @@ services:
     envVars:
       - key: TAVILY_API_KEY
         sync: false
+      - key: GROQ_API_KEY
+        sync: false  
