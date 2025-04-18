@@ -9,14 +9,27 @@ from urllib.parse import quote
 from agno.agent import Agent
 from langchain.agents import Tool
 from langchain_community.tools.tavily_search import TavilySearchResults
-from agno.models.google import Gemini
+# from agno.models.google import Gemini
 from datetime import date, timedelta, datetime
+from huggingface_hub import login
+
+from agno.models.groq import Groq
+from agno.tools.duckduckgo import DuckDuckGoTools
+
+from agno.models.huggingface import HuggingFace
 
 load_dotenv()
 
+# HF_TOKEN = os.getenv("HF_TOKEN")
+# login(token=HF_TOKEN)
+
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 tavily_tool = TavilySearchResults(tavily_api_key=TAVILY_API_KEY)
+
+model_id = "mistralai/Mistral-7B-Instruct-v0.3"
+# model_id = "meta-llama/Llama-3.3-70B-Instruct"
 
 def TavilySearch(query: str) -> str:
     return tavily_tool.run(query)
@@ -180,7 +193,7 @@ st.markdown(
     <div style="
         text-align: center; 
         padding: 15px; 
-        background-color: #ffecd1; 
+        background-color: #c2b280; 
         border-radius: 10px; 
         margin-top: 20px;
     ">
@@ -334,7 +347,13 @@ researcher = Agent(
         "Prioritize information from reliable sources and official travel guides.",
         "Provide well-structured summaries with key insights and recommendations."
     ],
-    model=Gemini(id="gemini-2.0-flash-exp"),
+    # model=HuggingFace(
+    #     id=model_id, max_tokens=4096, temperature=0
+    # ),
+
+    # model=Gemini(id="gemini-2.0-flash-exp"),
+    model=Groq(id="llama-3.3-70b-versatile",api_key=GROQ_API_KEY),
+    tools=[DuckDuckGoTools()],
     # tools=[SerpApiTools(api_key=SERPAPI_KEY)],
     # tools=[TavilySearch],
     add_datetime_to_instructions=True,
@@ -350,8 +369,13 @@ planner = Agent(
         "Optimize the schedule for convenience and enjoyment.",
         "Present the itinerary in a structured format."
     ],
-    model=Gemini(id="gemini-2.0-flash-exp"),
+    # model=Gemini(id="gemini-2.0-flash-exp"),
     add_datetime_to_instructions=True,
+    model=Groq(id="llama-3.3-70b-versatile",api_key=GROQ_API_KEY),
+    # model=HuggingFace(
+    #     id=model_id, max_tokens=4096, temperature=0
+    # ),
+    # tools=[DuckDuckGoTools()]
 )
 
 hotel_restaurant_finder = Agent(
@@ -363,10 +387,15 @@ hotel_restaurant_finder = Agent(
         "Prioritize results based on user preferences, ratings, and availability.",
         "Provide direct booking links or reservation options where possible."
     ],
-    model=Gemini(id="gemini-2.0-flash-exp"),
+    # model=Gemini(id="gemini-2.0-flash-exp"),
     # tools=[SerpApiTools(api_key=SERPAPI_KEY)],
     # tools=[TavilySearch],
+    # model=HuggingFace(
+    #     id=model_id, max_tokens=4096, temperature=0
+    # ),
     add_datetime_to_instructions=True,
+    model=Groq(id="llama-3.3-70b-versatile",api_key=GROQ_API_KEY),
+    tools=[DuckDuckGoTools()]
 )
 
 if dates_valid:
@@ -523,3 +552,6 @@ if dates_valid:
         st.success("✅ Travel plan generated successfully!")
 else:
     st.warning("⚠️ Please correct the date errors before generating the travel plan.")        
+
+st.markdown("---")
+st.markdown("📝 Developed by [Debapriyo Saha](https://www.linkedin.com/in/debapriyo-saha/)")
