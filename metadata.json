@@ -1,0 +1,7 @@
+{
+  "name": "SkyBound AI Travel Planner",
+  "description": "A premium AI-powered travel assistant that creates comprehensive itineraries, finds real-time flight and hotel estimates, and generates beautiful destination visuals.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

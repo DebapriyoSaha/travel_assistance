@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Circle background -->
+  <circle cx="50" cy="50" r="48" fill="url(#skyGradient)"/>
+  <!-- Paper plane icon -->
+  <path d="M25 55 L70 30 L55 70 L45 55 Z" fill="white" opacity="0.95"/>
+  <path d="M70 30 L45 55 L40 75 L55 70 Z" fill="white" opacity="0.8"/>
+  <path d="M45 55 L40 75 L35 60 Z" fill="white" opacity="0.6"/>
+  <!-- Small trail lines -->
+  <line x1="20" y1="45" x2="30" y2="50" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="18" y1="55" x2="28" y2="55" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <line x1="22" y1="65" x2="32" y2="62" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+</svg>

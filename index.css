@@ -1,0 +1,88 @@
+/* Print Styles for Professional PDF Export */
+@media print {
+  /* Reset and base */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: white !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    color: #1a202c !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide non-print elements */
+  .no-print,
+  .screen-only,
+  header,
+  .animate-ping,
+  button:not(.print-show),
+  nav {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Hide the hidden class override for print */
+  .print-only.hidden {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Page settings */
+  @page {
+    size: A4;
+    margin: 20mm 10mm 15mm 10mm;
+  }
+
+  /* Ensure print-only content has top padding */
+  .print-only {
+    padding-top: 10mm !important;
+    margin-top: 0 !important;
+  }
+
+  /* Remove animations */
+  .animate-wow {
+    animation: none !important;
+  }
+
+  /* Avoid page breaks inside elements */
+  .print-section,
+  .print-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Force page breaks */
+  .print-page-break {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Simplify spacing */
+  .space-y-20 > * + * {
+    margin-top: 0 !important;
+  }
+
+  .py-10 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* Screen-only indicator */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
