@@ -1,6 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
-import { AIRPORTS } from '../airports';
 
 // Vercel Function Configuration
 export const config = {
@@ -32,28 +31,35 @@ const METRO_TO_AIRPORT: Record<string, string> = {
   'STO': 'ARN',  // Stockholm → Arlanda (primary)
 };
 
+// Airport code to city name mapping for display purposes
+const AIRPORT_CITY_NAMES: Record<string, string> = {
+  'JFK': 'New York', 'LGA': 'New York', 'EWR': 'Newark', 'LAX': 'Los Angeles',
+  'SFO': 'San Francisco', 'ORD': 'Chicago', 'MIA': 'Miami', 'DFW': 'Dallas',
+  'ATL': 'Atlanta', 'SEA': 'Seattle', 'BOS': 'Boston', 'DEN': 'Denver',
+  'LAS': 'Las Vegas', 'PHX': 'Phoenix', 'IAH': 'Houston', 'LHR': 'London',
+  'LGW': 'London', 'CDG': 'Paris', 'ORY': 'Paris', 'FRA': 'Frankfurt',
+  'AMS': 'Amsterdam', 'MAD': 'Madrid', 'BCN': 'Barcelona', 'FCO': 'Rome',
+  'MXP': 'Milan', 'ZRH': 'Zurich', 'VIE': 'Vienna', 'MUC': 'Munich',
+  'DXB': 'Dubai', 'AUH': 'Abu Dhabi', 'DOH': 'Doha', 'IST': 'Istanbul',
+  'SIN': 'Singapore', 'HKG': 'Hong Kong', 'NRT': 'Tokyo', 'HND': 'Tokyo',
+  'ICN': 'Seoul', 'PEK': 'Beijing', 'PVG': 'Shanghai', 'BKK': 'Bangkok',
+  'KUL': 'Kuala Lumpur', 'SYD': 'Sydney', 'MEL': 'Melbourne', 'AKL': 'Auckland',
+  'DEL': 'New Delhi', 'BOM': 'Mumbai', 'BLR': 'Bangalore', 'MAA': 'Chennai',
+  'HYD': 'Hyderabad', 'CCU': 'Kolkata', 'GOI': 'Goa', 'COK': 'Kochi',
+  'JAI': 'Jaipur', 'AMD': 'Ahmedabad', 'PNQ': 'Pune', 'GRU': 'São Paulo',
+  'GIG': 'Rio de Janeiro', 'MEX': 'Mexico City', 'CUN': 'Cancun',
+  'EZE': 'Buenos Aires', 'SCL': 'Santiago', 'BOG': 'Bogota', 'LIM': 'Lima',
+  'JNB': 'Johannesburg', 'CPT': 'Cape Town', 'CAI': 'Cairo', 'CMB': 'Colombo',
+  'MLE': 'Maldives', 'HAN': 'Hanoi', 'SGN': 'Ho Chi Minh City', 'MNL': 'Manila',
+  'CGK': 'Jakarta', 'DPS': 'Bali', 'KTM': 'Kathmandu', 'DAC': 'Dhaka',
+  'CMN': 'Casablanca', 'ADD': 'Addis Ababa', 'NBO': 'Nairobi', 'LOS': 'Lagos',
+  'ACC': 'Accra', 'DKR': 'Dakar', 'TUN': 'Tunis', 'ALG': 'Algiers',
+};
+
 // Normalize airport code - convert metro area codes to primary airport codes
 function normalizeAirportCode(code: string): string {
   const upperCode = (code || '').toUpperCase().trim();
   return METRO_TO_AIRPORT[upperCode] || upperCode;
-}
-
-// Helper function to get city name from airport code using AIRPORTS
-function getAirportByCode(code: string): { name: string; code: string } | undefined {
-  const upperCode = (code || '').toUpperCase().trim();
-  return AIRPORTS.find(a => a.code.toUpperCase() === upperCode);
-}
-
-// Extract clean city name from airport name (removes airport details)
-function extractCityName(airportName: string): string {
-  // Remove common suffixes like "- Indira Gandhi International Airport India"
-  let name = airportName
-    .replace(/[-–]\s*[^,]+(?:Airport|International|Intl\.?|Field)[^,]*$/i, '')
-    .replace(/\s*\([^)]+\)\s*$/, '')
-    .trim();
-  // Remove country names at the end
-  name = name.replace(/\s+(India|USA|UK|United Kingdom|Australia|Germany|France|Japan|China|Singapore|UAE|United Arab Emirates)$/i, '').trim();
-  return name || airportName;
 }
 
 interface FlightSearchResult {
@@ -244,9 +250,9 @@ function normalizeCityName(raw: string): string {
 
 function getCityNameFromCode(codeOrName: string): string {
   const code = String(codeOrName || '').trim().toUpperCase();
-  const found = getAirportByCode(code);
-  if (found) {
-    return extractCityName(found.name);
+  // First check our inline city names map
+  if (AIRPORT_CITY_NAMES[code]) {
+    return AIRPORT_CITY_NAMES[code];
   }
   return normalizeCityName(String(codeOrName || '').trim());
 }
