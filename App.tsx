@@ -4,7 +4,7 @@ import Header from './components/Header';
 import TripForm from './components/TripForm';
 import TripResults from './components/TripResults';
 import { TravelData, GroupType, BudgetLevel, FlightClass, Currency } from './types';
-import { generateTravelPlan } from './services/geminiService';
+import { generateTravelPlan } from './services/travelPlanService';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(false);

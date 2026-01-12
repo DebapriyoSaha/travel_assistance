@@ -166,7 +166,7 @@ skybound-ai-travel-planner/
 │   ├── TripForm.tsx          # Trip planning form
 │   └── TripResults.tsx       # Complete trip results view
 ├── services/                 # Service Layer
-│   ├── geminiService.ts      # API client for travel plan
+│   ├── travelPlanService.ts  # API client for travel plan
 │   └── wikiImageService.ts   # Wikipedia/Wikimedia image fetcher
 ├── server/                   # Development Server (Vite plugin)
 │   ├── index.mjs             # Standalone server
