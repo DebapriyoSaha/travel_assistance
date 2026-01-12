@@ -1,6 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
 
+// Vercel Function Configuration
+export const config = {
+  maxDuration: 60, // Maximum allowed on Pro plan (10s on Hobby)
+};
+
 // SerpAPI configuration for Google Flights
 const SERPAPI_URL = 'https://serpapi.com/search.json';
 
