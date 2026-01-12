@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Groq from 'groq-sdk';
+import { AIRPORTS } from '../airports';
 
 // Vercel Function Configuration
 export const config = {
@@ -37,82 +38,23 @@ function normalizeAirportCode(code: string): string {
   return METRO_TO_AIRPORT[upperCode] || upperCode;
 }
 
-// Major cities for airport code lookup
-const MAJOR_CITIES = [
-  { code: 'JFK', name: 'New York (JFK)' },
-  { code: 'LGA', name: 'New York (LaGuardia)' },
-  { code: 'EWR', name: 'Newark' },
-  { code: 'LAX', name: 'Los Angeles' },
-  { code: 'SFO', name: 'San Francisco' },
-  { code: 'ORD', name: 'Chicago (O\'Hare)' },
-  { code: 'MIA', name: 'Miami' },
-  { code: 'DFW', name: 'Dallas' },
-  { code: 'ATL', name: 'Atlanta' },
-  { code: 'SEA', name: 'Seattle' },
-  { code: 'BOS', name: 'Boston' },
-  { code: 'DEN', name: 'Denver' },
-  { code: 'LAS', name: 'Las Vegas' },
-  { code: 'PHX', name: 'Phoenix' },
-  { code: 'IAH', name: 'Houston' },
-  { code: 'LHR', name: 'London (Heathrow)' },
-  { code: 'LGW', name: 'London (Gatwick)' },
-  { code: 'CDG', name: 'Paris (CDG)' },
-  { code: 'ORY', name: 'Paris (Orly)' },
-  { code: 'FRA', name: 'Frankfurt' },
-  { code: 'AMS', name: 'Amsterdam' },
-  { code: 'MAD', name: 'Madrid' },
-  { code: 'BCN', name: 'Barcelona' },
-  { code: 'FCO', name: 'Rome' },
-  { code: 'MXP', name: 'Milan' },
-  { code: 'ZRH', name: 'Zurich' },
-  { code: 'VIE', name: 'Vienna' },
-  { code: 'MUC', name: 'Munich' },
-  { code: 'DXB', name: 'Dubai' },
-  { code: 'AUH', name: 'Abu Dhabi' },
-  { code: 'DOH', name: 'Doha' },
-  { code: 'IST', name: 'Istanbul' },
-  { code: 'SIN', name: 'Singapore' },
-  { code: 'HKG', name: 'Hong Kong' },
-  { code: 'NRT', name: 'Tokyo (Narita)' },
-  { code: 'HND', name: 'Tokyo (Haneda)' },
-  { code: 'ICN', name: 'Seoul (Incheon)' },
-  { code: 'PEK', name: 'Beijing' },
-  { code: 'PVG', name: 'Shanghai (Pudong)' },
-  { code: 'BKK', name: 'Bangkok' },
-  { code: 'KUL', name: 'Kuala Lumpur' },
-  { code: 'SYD', name: 'Sydney' },
-  { code: 'MEL', name: 'Melbourne' },
-  { code: 'AKL', name: 'Auckland' },
-  { code: 'DEL', name: 'New Delhi' },
-  { code: 'BOM', name: 'Mumbai' },
-  { code: 'BLR', name: 'Bangalore' },
-  { code: 'MAA', name: 'Chennai' },
-  { code: 'HYD', name: 'Hyderabad' },
-  { code: 'CCU', name: 'Kolkata' },
-  { code: 'GOI', name: 'Goa' },
-  { code: 'COK', name: 'Kochi' },
-  { code: 'JAI', name: 'Jaipur' },
-  { code: 'AMD', name: 'Ahmedabad' },
-  { code: 'PNQ', name: 'Pune' },
-  { code: 'GRU', name: 'São Paulo' },
-  { code: 'GIG', name: 'Rio de Janeiro' },
-  { code: 'MEX', name: 'Mexico City' },
-  { code: 'CUN', name: 'Cancun' },
-  { code: 'EZE', name: 'Buenos Aires' },
-  { code: 'SCL', name: 'Santiago' },
-  { code: 'BOG', name: 'Bogota' },
-  { code: 'LIM', name: 'Lima' },
-  { code: 'JNB', name: 'Johannesburg' },
-  { code: 'CPT', name: 'Cape Town' },
-  { code: 'CAI', name: 'Cairo' },
-  { code: 'CMB', name: 'Colombo' },
-  { code: 'MLE', name: 'Maldives' },
-  { code: 'HAN', name: 'Hanoi' },
-  { code: 'SGN', name: 'Ho Chi Minh City' },
-  { code: 'MNL', name: 'Manila' },
-  { code: 'CGK', name: 'Jakarta' },
-  { code: 'DPS', name: 'Bali' }
-];
+// Helper function to get city name from airport code using AIRPORTS
+function getAirportByCode(code: string): { name: string; code: string } | undefined {
+  const upperCode = (code || '').toUpperCase().trim();
+  return AIRPORTS.find(a => a.code.toUpperCase() === upperCode);
+}
+
+// Extract clean city name from airport name (removes airport details)
+function extractCityName(airportName: string): string {
+  // Remove common suffixes like "- Indira Gandhi International Airport India"
+  let name = airportName
+    .replace(/[-–]\s*[^,]+(?:Airport|International|Intl\.?|Field)[^,]*$/i, '')
+    .replace(/\s*\([^)]+\)\s*$/, '')
+    .trim();
+  // Remove country names at the end
+  name = name.replace(/\s+(India|USA|UK|United Kingdom|Australia|Germany|France|Japan|China|Singapore|UAE|United Arab Emirates)$/i, '').trim();
+  return name || airportName;
+}
 
 interface FlightSearchResult {
   flights: any[];
@@ -302,8 +244,11 @@ function normalizeCityName(raw: string): string {
 
 function getCityNameFromCode(codeOrName: string): string {
   const code = String(codeOrName || '').trim().toUpperCase();
-  const found = MAJOR_CITIES.find(c => c.code.toUpperCase() === code);
-  return normalizeCityName(found?.name || String(codeOrName || '').trim());
+  const found = getAirportByCode(code);
+  if (found) {
+    return extractCityName(found.name);
+  }
+  return normalizeCityName(String(codeOrName || '').trim());
 }
 
 function buildPrompt(params: any, realFlightPrice?: number): string {
