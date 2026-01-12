@@ -9,6 +9,34 @@ export const config = {
 // SerpAPI configuration for Google Flights
 const SERPAPI_URL = 'https://serpapi.com/search.json';
 
+// Metropolitan area code to primary airport code mapping
+// Google Flights sometimes returns metro area codes instead of airport codes
+const METRO_TO_AIRPORT: Record<string, string> = {
+  'NEW': 'DEL',  // New Delhi metropolitan area → Indira Gandhi International
+  'NYC': 'JFK',  // New York City → JFK (primary)
+  'LON': 'LHR',  // London → Heathrow (primary)
+  'PAR': 'CDG',  // Paris → Charles de Gaulle (primary)
+  'TYO': 'NRT',  // Tokyo → Narita (primary)
+  'CHI': 'ORD',  // Chicago → O'Hare (primary)
+  'WAS': 'IAD',  // Washington DC → Dulles (primary)
+  'BUE': 'EZE',  // Buenos Aires → Ezeiza (primary)
+  'MIL': 'MXP',  // Milan → Malpensa (primary)
+  'OSA': 'KIX',  // Osaka → Kansai (primary)
+  'SAO': 'GRU',  // São Paulo → Guarulhos (primary)
+  'RIO': 'GIG',  // Rio de Janeiro → Galeão (primary)
+  'MOW': 'SVO',  // Moscow → Sheremetyevo (primary)
+  'BJS': 'PEK',  // Beijing → Capital (primary)
+  'SHA': 'PVG',  // Shanghai → Pudong (primary)
+  'SEL': 'ICN',  // Seoul → Incheon (primary)
+  'STO': 'ARN',  // Stockholm → Arlanda (primary)
+};
+
+// Normalize airport code - convert metro area codes to primary airport codes
+function normalizeAirportCode(code: string): string {
+  const upperCode = (code || '').toUpperCase().trim();
+  return METRO_TO_AIRPORT[upperCode] || upperCode;
+}
+
 // Major cities for airport code lookup
 const MAJOR_CITIES = [
   { code: 'JFK', name: 'New York (JFK)' },
@@ -131,8 +159,8 @@ function parseFlightData(flight: any, currency: string, depId: string, arrId: st
     layovers: layoverCities,
     airlineLogo: flight?.airline_logo || firstLeg?.airline_logo,
     aircraft: firstLeg?.airplane || 'N/A',
-    departureAirport: firstLeg?.departure_airport?.id || depId,
-    arrivalAirport: lastLeg?.arrival_airport?.id || arrId,
+    departureAirport: normalizeAirportCode(firstLeg?.departure_airport?.id || depId),
+    arrivalAirport: normalizeAirportCode(lastLeg?.arrival_airport?.id || arrId),
     priceBreakup: {
       base: `${currencySymbol}${baseFare.toLocaleString(locale)}`,
       taxes: `${currencySymbol}${taxes.toLocaleString(locale)}`,
