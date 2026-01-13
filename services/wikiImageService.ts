@@ -1,10 +1,11 @@
 /**
- * Image service using Wikipedia/Wikimedia APIs for high-quality, free images.
+ * Image service using multiple sources for high-quality, relevant images.
  * 
  * Strategy:
- * 1. Try Wikipedia page image API (best for well-known landmarks)
- * 2. Try Wikimedia Commons direct file lookup
- * 3. Fallback to a reliable placeholder
+ * 1. Try Unsplash API for high-quality HD photos (PRIORITY)
+ * 2. Try Wikipedia page image API (good for well-known landmarks)
+ * 3. Try Wikimedia Commons direct file lookup
+ * 4. Fallback to a reliable placeholder
  */
 
 type ImageResult = {
@@ -48,6 +49,37 @@ async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T | null> {
       clearTimeout(timeout);
     }
   });
+}
+
+/**
+ * Get high-quality image from Unsplash API.
+ * This provides the best quality HD images for landmarks and places.
+ */
+async function getUnsplashImage(query: string): Promise<ImageResult | null> {
+  const q = query.trim();
+  if (!q) return null;
+
+  try {
+    // Use the local API endpoint which handles the Unsplash key
+    const url = `/api/unsplash-search?query=${encodeURIComponent(q)}`;
+    const data = await fetchJson<any>(url);
+
+    if (!data?.results || data.results.length === 0) return null;
+
+    // Get the first (most relevant) high-quality image
+    const firstResult = data.results[0];
+    const imageUrl = firstResult?.urls?.regular || firstResult?.urls?.full || firstResult?.urls?.raw;
+    
+    if (!imageUrl) return null;
+
+    return {
+      url: imageUrl,
+      title: q,
+      attribution: `Photo by ${firstResult?.user?.name || 'Unsplash'} on Unsplash`,
+    };
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -267,7 +299,16 @@ export async function resolvePlaceImage(query: string, context?: string): Promis
       // Get search variants for better matching
       const variants = extractSearchVariants(rawQuery, rawContext);
       
-      // Strategy 1: Try exact Wikipedia page image for each variant
+      // Strategy 1: PRIORITY - Try Unsplash for high-quality HD images
+      for (const variant of variants.slice(0, 3)) { // Try top 3 most relevant variants
+        const unsplashResult = await getUnsplashImage(variant);
+        if (unsplashResult) {
+          cache.set(key, unsplashResult);
+          return unsplashResult;
+        }
+      }
+
+      // Strategy 2: Try exact Wikipedia page image for each variant
       for (const variant of variants) {
         const exactResult = await getWikipediaImage(variant);
         if (exactResult) {
@@ -276,7 +317,7 @@ export async function resolvePlaceImage(query: string, context?: string): Promis
         }
       }
 
-      // Strategy 2: Search Wikipedia for each variant
+      // Strategy 3: Search Wikipedia for each variant
       for (const variant of variants) {
         const searchResult = await searchWikipediaForImage(variant);
         if (searchResult) {
@@ -285,7 +326,7 @@ export async function resolvePlaceImage(query: string, context?: string): Promis
         }
       }
 
-      // Strategy 3: Search Wikimedia Commons (good for geographic features)
+      // Strategy 4: Search Wikimedia Commons (good for geographic features)
       for (const variant of variants.slice(0, 3)) { // Limit to top 3 variants
         const commonsResult = await searchWikimediaCommons(variant);
         if (commonsResult) {
@@ -294,7 +335,16 @@ export async function resolvePlaceImage(query: string, context?: string): Promis
         }
       }
 
-      // Fallback: Use a nice placeholder image
+      // Fallback: Try Unsplash with context as last resort before placeholder
+      if (rawContext && rawContext !== rawQuery) {
+        const contextUnsplash = await getUnsplashImage(rawContext);
+        if (contextUnsplash) {
+          cache.set(key, contextUnsplash);
+          return contextUnsplash;
+        }
+      }
+
+      // Final fallback: Use a nice placeholder image
       const fallbackUrl = getFallbackImageUrl(rawQuery);
       const fallbackResult: ImageResult = { 
         url: fallbackUrl, 
