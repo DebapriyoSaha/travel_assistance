@@ -341,7 +341,7 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
   };
 
   return (
-    <div ref={resultsRef} className="space-y-16 animate-wow py-6">
+    <div ref={resultsRef} className="space-y-8 sm:space-y-16 animate-wow py-3 sm:py-6">
       
       {/* ============ PRINT-ONLY PDF LAYOUT ============ */}
       <div className="print-only hidden" style={{ paddingTop: '40px', marginTop: '20px' }}>
@@ -641,7 +641,7 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
       <div className="screen-only">
       {/* Hero Section with Carousel */}
       <section 
-        className="relative rounded-[60px] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] h-[700px] group"
+        className="relative rounded-[32px] sm:rounded-[60px] overflow-hidden shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)] sm:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] h-[350px] sm:h-[500px] md:h-[700px] group"
         onMouseEnter={() => setIsHeroHovered(true)}
         onMouseLeave={() => setIsHeroHovered(false)}
       >
@@ -696,13 +696,13 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
           <>
             <button 
               onClick={prevHeroSlide}
-              className="absolute left-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 duration-500 border border-white/20 shadow-2xl z-20"
+              className="absolute left-3 sm:left-8 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 bg-white/10 hover:bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 transform -translate-x-4 group-hover:translate-x-0 duration-500 border border-white/20 shadow-2xl z-20 text-sm sm:text-base"
             >
               <i className="fas fa-chevron-left text-white text-xl"></i>
             </button>
             <button 
               onClick={nextHeroSlide}
-              className="absolute right-8 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/10 hover:bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 duration-500 border border-white/20 shadow-2xl z-20"
+              className="absolute right-3 sm:right-8 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 bg-white/10 hover:bg-white/30 backdrop-blur-xl rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 duration-500 border border-white/20 shadow-2xl z-20 text-sm sm:text-base"
             >
               <i className="fas fa-chevron-right text-white text-xl"></i>
             </button>
@@ -711,15 +711,15 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
         
         {/* Carousel Dots */}
         {heroImages.length > 1 && (
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+          <div className="absolute bottom-3 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-1.5 sm:gap-3 z-20">
             {heroImages.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => goToHeroSlide(idx)}
                 className={`transition-all duration-500 rounded-full ${
                   idx === heroImageIndex 
-                    ? 'w-10 h-3 bg-white shadow-lg shadow-white/30' 
-                    : 'w-3 h-3 bg-white/40 hover:bg-white/60'
+                    ? 'w-6 h-2 sm:w-10 sm:h-3 bg-white shadow-lg shadow-white/30' 
+                    : 'w-2 h-2 sm:w-3 sm:h-3 bg-white/40 hover:bg-white/60'
                 }`}
               />
             ))}
@@ -727,65 +727,65 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
         )}
         
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col justify-end p-12 md:p-20 z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-            <div className="max-w-4xl space-y-6">
+        <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-8 md:p-12 lg:p-20 z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-12">
+            <div className="max-w-4xl space-y-3 sm:space-y-6">
               {/* AI Badge */}
-              <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-2xl border border-white/20 px-6 py-3 rounded-full shadow-xl">
-                <span className="relative flex h-3 w-3">
+              <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-white/10 backdrop-blur-2xl border border-white/20 px-3 py-1.5 sm:px-6 sm:py-3 rounded-full shadow-xl">
+                <span className="relative flex h-2 w-2 sm:h-3 sm:w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 sm:h-3 sm:w-3 bg-blue-500"></span>
                 </span>
-                <span className="text-xs font-black text-white uppercase tracking-[0.25em]">AI-Powered Precision</span>
+                <span className="text-[9px] sm:text-xs font-black text-white uppercase tracking-[0.15em] sm:tracking-[0.25em]">AI-Powered Precision</span>
               </div>
               
               {/* Prominent IATA Code Display */}
-              <div className="flex items-center gap-6 my-6">
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 px-8 py-5 rounded-3xl shadow-2xl hover:bg-white/15 transition-all">
-                  <p className="text-xs font-bold text-white/70 uppercase tracking-widest mb-2">From</p>
-                  <p className="text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-lg">{sourceCode}</p>
-                  <p className="text-sm text-white/80 mt-2 font-medium">{sourceName}</p>
+              <div className="flex items-center gap-2 sm:gap-4 md:gap-6 my-3 sm:my-6">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 px-3 py-2 sm:px-6 sm:py-4 md:px-8 md:py-5 rounded-2xl sm:rounded-3xl shadow-2xl hover:bg-white/15 transition-all">
+                  <p className="text-[8px] sm:text-xs font-bold text-white/70 uppercase tracking-widest mb-1 sm:mb-2">From</p>
+                  <p className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tight drop-shadow-lg">{sourceCode}</p>
+                  <p className="text-[10px] sm:text-sm text-white/80 mt-1 sm:mt-2 font-medium">{sourceName}</p>
                 </div>
-                <div className="flex flex-col items-center px-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-blue-500/30 animate-pulse">
-                    <i className="fas fa-plane text-2xl text-white transform rotate-90 md:rotate-0"></i>
+                <div className="flex flex-col items-center px-2 sm:px-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-xl shadow-blue-500/30 animate-pulse">
+                    <i className="fas fa-plane text-base sm:text-xl md:text-2xl text-white transform rotate-90 md:rotate-0"></i>
                   </div>
-                  <span className="text-sm text-white/70 mt-3 font-bold">{data.tripPlan.durationDays} Days</span>
+                  <span className="text-[9px] sm:text-sm text-white/70 mt-1.5 sm:mt-3 font-bold">{data.tripPlan.durationDays} Days</span>
                 </div>
-                <div className="bg-gradient-to-br from-blue-600/30 to-indigo-600/30 backdrop-blur-xl border border-white/20 px-8 py-5 rounded-3xl shadow-2xl hover:from-blue-500/40 hover:to-indigo-500/40 transition-all">
-                  <p className="text-xs font-bold text-white/70 uppercase tracking-widest mb-2">To</p>
-                  <p className="text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-lg">{destCode}</p>
-                  <p className="text-sm text-white/80 mt-2 font-medium">{destinationName}</p>
+                <div className="bg-gradient-to-br from-blue-600/30 to-indigo-600/30 backdrop-blur-xl border border-white/20 px-3 py-2 sm:px-6 sm:py-4 md:px-8 md:py-5 rounded-2xl sm:rounded-3xl shadow-2xl hover:from-blue-500/40 hover:to-indigo-500/40 transition-all">
+                  <p className="text-[8px] sm:text-xs font-bold text-white/70 uppercase tracking-widest mb-1 sm:mb-2">To</p>
+                  <p className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tight drop-shadow-lg">{destCode}</p>
+                  <p className="text-[10px] sm:text-sm text-white/80 mt-1 sm:mt-2 font-medium">{destinationName}</p>
                 </div>
               </div>
               
               {/* Title */}
-              <h2 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight">
+              <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight">
                 <span className="drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">Your {data.tripPlan.durationDays}-Day Adventure</span>
               </h2>
               
               {/* Tags Row */}
-              <div className="flex flex-wrap items-center mt-8 gap-4">
-                <span className="bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl text-white font-bold text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
-                  <i className="fas fa-chart-line mr-3 text-emerald-400"></i> {data.tripPlan.budgetLevel} Tier
+              <div className="flex flex-wrap items-center mt-3 sm:mt-8 gap-2 sm:gap-4">
+                <span className="bg-white/10 backdrop-blur-xl px-3 py-1.5 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl text-white font-bold text-[10px] sm:text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
+                  <i className="fas fa-chart-line mr-1.5 sm:mr-3 text-emerald-400"></i> {data.tripPlan.budgetLevel} Tier
                 </span>
-                <span className="bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl text-white font-bold text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
-                  <i className="fas fa-plane-up mr-3 text-blue-400"></i> {data.tripPlan.flightClass}
+                <span className="bg-white/10 backdrop-blur-xl px-3 py-1.5 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl text-white font-bold text-[10px] sm:text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
+                  <i className="fas fa-plane-up mr-1.5 sm:mr-3 text-blue-400"></i> {data.tripPlan.flightClass}
                 </span>
-                <span className="bg-white/10 backdrop-blur-xl px-6 py-3 rounded-2xl text-white font-bold text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
-                  <i className="fas fa-users mr-3 text-purple-400"></i> {data.tripPlan.members} Travelers
+                <span className="bg-white/10 backdrop-blur-xl px-3 py-1.5 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl text-white font-bold text-[10px] sm:text-sm border border-white/20 shadow-xl hover:bg-white/20 transition-all">
+                  <i className="fas fa-users mr-1.5 sm:mr-3 text-purple-400"></i> {data.tripPlan.members} Travelers
                 </span>
                 
                 {/* Budget Card */}
-                <div className="bg-white/95 backdrop-blur-xl px-6 py-4 rounded-2xl shadow-2xl border border-white/50">
-                  <div className="flex items-center gap-6">
-                    <div className="text-center border-r border-slate-200 pr-6">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Budget</p>
-                      <p className="text-xl font-black text-slate-900">{formatMoney(totalBudget, currencySymbol)}</p>
+                <div className="bg-white/95 backdrop-blur-xl px-3 py-2 sm:px-6 sm:py-4 rounded-xl sm:rounded-2xl shadow-2xl border border-white/50">
+                  <div className="flex items-center gap-3 sm:gap-6">
+                    <div className="text-center border-r border-slate-200 pr-3 sm:pr-6">
+                      <p className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5 sm:mb-1">Total Budget</p>
+                      <p className="text-sm sm:text-xl font-black text-slate-900">{formatMoney(totalBudget, currencySymbol)}</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Per Person</p>
-                      <p className="text-xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <p className="text-[8px] sm:text-[10px] font-black text-blue-600 uppercase tracking-widest mb-0.5 sm:mb-1">Per Person</p>
+                      <p className="text-sm sm:text-xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                         {formatMoney(perPersonBudget, currencySymbol)}
                       </p>
                     </div>

@@ -42,12 +42,12 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
   
   return (
     <div 
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-500 hover:-translate-y-1 border border-slate-100"
+      className="group relative bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-blue-100/50 transition-all duration-500 hover:-translate-y-1 border border-slate-100"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Carousel Section */}
-      <div className="relative h-40 overflow-hidden">
+      <div className="relative h-32 sm:h-40 overflow-hidden">"
         {/* Images */}
         {flightCarouselImages.map((img, idx) => (
           <div
@@ -100,60 +100,60 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
         </div>
         
         {/* Airline Badge - Top Left */}
-        <div className="absolute top-3 left-3 flex items-center gap-2 bg-white/95 backdrop-blur-md rounded-xl px-2.5 py-1.5 shadow-lg border border-white/50">
+        <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex items-center gap-1.5 sm:gap-2 bg-white/95 backdrop-blur-md rounded-lg sm:rounded-xl px-2 py-1 sm:px-2.5 sm:py-1.5 shadow-lg border border-white/50">
           {flight.airlineLogo ? (
             <img 
               src={flight.airlineLogo} 
               alt={flight.airline}
-              className="w-7 h-7 rounded-lg object-contain bg-white p-0.5"
+              className="w-5 h-5 sm:w-7 sm:h-7 rounded-md sm:rounded-lg object-contain bg-white p-0.5"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
                 (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
               }}
             />
           ) : null}
-          <div className={`w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center ${flight.airlineLogo ? 'hidden' : ''}`}>
-            <i className="fas fa-plane text-white text-[10px]"></i>
+          <div className={`w-5 h-5 sm:w-7 sm:h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md sm:rounded-lg flex items-center justify-center ${flight.airlineLogo ? 'hidden' : ''}`}>
+            <i className="fas fa-plane text-white text-[8px] sm:text-[10px]"></i>
           </div>
           <div>
-            <p className="font-bold text-slate-800 text-xs leading-tight">{flight.airline}</p>
-            <p className="text-[8px] font-semibold text-blue-600 tracking-wide">{flight.flightNumber}</p>
+            <p className="font-bold text-slate-800 text-[10px] sm:text-xs leading-tight">{flight.airline}</p>
+            <p className="text-[7px] sm:text-[8px] font-semibold text-blue-600 tracking-wide">{flight.flightNumber}</p>
           </div>
         </div>
         
         {/* Price Badge - Top Right */}
-        <div className="absolute top-3 right-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl px-3 py-1.5 shadow-lg">
-          <p className="text-base font-black text-white tracking-tight drop-shadow">{flight.priceBreakup.total}</p>
-          <p className="text-[7px] font-bold text-emerald-100 uppercase tracking-wider text-center">per person</p>
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg sm:rounded-xl px-2 py-1 sm:px-3 sm:py-1.5 shadow-lg">
+          <p className="text-sm sm:text-base font-black text-white tracking-tight drop-shadow">{flight.priceBreakup.total}</p>
+          <p className="text-[6px] sm:text-[7px] font-bold text-emerald-100 uppercase tracking-wider text-center">per person</p>
         </div>
         
         {/* Flight Route - Bottom */}
-        <div className="absolute bottom-4 left-3 right-3">
+        <div className="absolute bottom-2 sm:bottom-4 left-2 right-2 sm:left-3 sm:right-3">
           <div className="flex items-center justify-between">
             <div className="text-left">
-              <p className="text-xl font-black text-white drop-shadow tracking-tight">{flight.departureTime}</p>
-              <p className="text-[10px] font-semibold text-blue-200 tracking-wide">{flight.departureAirport || 'DEP'}</p>
+              <p className="text-base sm:text-xl font-black text-white drop-shadow tracking-tight">{flight.departureTime}</p>
+              <p className="text-[9px] sm:text-[10px] font-semibold text-blue-200 tracking-wide">{flight.departureAirport || 'DEP'}</p>
             </div>
             
-            <div className="flex-1 px-3 flex flex-col items-center">
-              <div className="flex items-center gap-1 mb-1">
-                <i className="fas fa-clock text-[8px] text-blue-300"></i>
-                <span className="text-[10px] font-bold text-white drop-shadow">{flight.duration}</span>
+            <div className="flex-1 px-2 sm:px-3 flex flex-col items-center">
+              <div className="flex items-center gap-1 mb-0.5 sm:mb-1">
+                <i className="fas fa-clock text-[7px] sm:text-[8px] text-blue-300"></i>
+                <span className="text-[9px] sm:text-[10px] font-bold text-white drop-shadow">{flight.duration}</span>
               </div>
               <div className="w-full flex items-center gap-0.5">
-                <div className="w-2 h-2 bg-blue-400 rounded-full shadow shadow-blue-400/50 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full shadow shadow-blue-400/50 animate-pulse"></div>
                 <div className="flex-1 h-px bg-gradient-to-r from-blue-400 via-white to-green-400 relative">
                   {flight.stops > 0 && flight.layovers?.slice(0, 2).map((_, idx) => (
                     <div 
                       key={idx}
-                      className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-400 rounded-full border border-white"
+                      className="absolute top-1/2 -translate-y-1/2 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-amber-400 rounded-full border border-white"
                       style={{ left: `${((idx + 1) / (flight.stops + 1)) * 100}%` }}
                     />
                   ))}
                 </div>
-                <div className="w-2 h-2 bg-green-400 rounded-full shadow shadow-green-400/50"></div>
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full shadow shadow-green-400/50"></div>
               </div>
-              <span className={`text-[8px] font-bold mt-1 px-2 py-0.5 rounded-full ${
+              <span className={`text-[7px] sm:text-[8px] font-bold mt-0.5 sm:mt-1 px-1.5 sm:px-2 py-0.5 rounded-full ${
                 flight.stops === 0 
                   ? 'bg-green-500/90 text-white' 
                   : 'bg-amber-500/90 text-white'
@@ -163,21 +163,21 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
             </div>
             
             <div className="text-right">
-              <p className="text-xl font-black text-white drop-shadow tracking-tight">{flight.arrivalTime}</p>
-              <p className="text-[10px] font-semibold text-green-200 tracking-wide">{flight.arrivalAirport || 'ARR'}</p>
+              <p className="text-base sm:text-xl font-black text-white drop-shadow tracking-tight">{flight.arrivalTime}</p>
+              <p className="text-[9px] sm:text-[10px] font-semibold text-green-200 tracking-wide">{flight.arrivalAirport || 'ARR'}</p>
             </div>
           </div>
         </div>
       </div>
       
       {/* Bottom Info Section */}
-      <div className="px-3 py-2.5 bg-gradient-to-b from-slate-50/80 to-white">
+      <div className="px-2 py-2 sm:px-3 sm:py-2.5 bg-gradient-to-b from-slate-50/80 to-white">
         {/* Layover info */}
         {flight.stops > 0 && flight.layovers && flight.layovers.length > 0 && (
-          <div className="mb-2 px-2 py-1.5 bg-amber-50 border border-amber-100 rounded-lg">
-            <p className="text-[10px] font-semibold text-amber-700 flex items-center gap-1.5">
-              <span className="w-4 h-4 bg-amber-500 rounded flex items-center justify-center">
-                <i className="fas fa-exchange-alt text-white text-[7px]"></i>
+          <div className="mb-1.5 sm:mb-2 px-1.5 py-1 sm:px-2 sm:py-1.5 bg-amber-50 border border-amber-100 rounded-md sm:rounded-lg">
+            <p className="text-[9px] sm:text-[10px] font-semibold text-amber-700 flex items-center gap-1 sm:gap-1.5">
+              <span className="w-3 h-3 sm:w-4 sm:h-4 bg-amber-500 rounded flex items-center justify-center">
+                <i className="fas fa-exchange-alt text-white text-[6px] sm:text-[7px]"></i>
               </span>
               <span className="text-slate-500">Via:</span>
               <span className="text-amber-800 font-bold">{flight.layovers.slice(0, 2).map(l => l.split(' ')[0]).join(' → ')}</span>
@@ -186,28 +186,28 @@ const FlightCard: React.FC<FlightCardProps> = ({ flight }) => {
         )}
 
         {/* Price Breakdown */}
-        <div className="flex items-center justify-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100/80 rounded-lg">
-            <i className="fas fa-ticket text-blue-500 text-[10px]"></i>
-            <span className="text-[10px] font-medium text-slate-500">Base:</span>
-            <span className="text-xs font-bold text-slate-700">{flight.priceBreakup.base}</span>
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
+          <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-slate-100/80 rounded-md sm:rounded-lg">
+            <i className="fas fa-ticket text-blue-500 text-[8px] sm:text-[10px]"></i>
+            <span className="text-[9px] sm:text-[10px] font-medium text-slate-500">Base:</span>
+            <span className="text-[10px] sm:text-xs font-bold text-slate-700">{flight.priceBreakup.base}</span>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100/80 rounded-lg">
-            <i className="fas fa-receipt text-indigo-500 text-[10px]"></i>
-            <span className="text-[10px] font-medium text-slate-500">Taxes:</span>
-            <span className="text-xs font-bold text-slate-700">{flight.priceBreakup.taxes}</span>
+          <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-slate-100/80 rounded-md sm:rounded-lg">
+            <i className="fas fa-receipt text-indigo-500 text-[8px] sm:text-[10px]"></i>
+            <span className="text-[9px] sm:text-[10px] font-medium text-slate-500">Taxes:</span>
+            <span className="text-[10px] sm:text-xs font-bold text-slate-700">{flight.priceBreakup.taxes}</span>
           </div>
           {flight.aircraft && flight.aircraft !== 'N/A' && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-blue-50/80 rounded-lg">
-              <i className="fas fa-plane text-blue-500 text-[10px]"></i>
-              <span className="text-[10px] font-bold text-blue-700">{flight.aircraft}</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 bg-blue-50/80 rounded-md sm:rounded-lg">
+              <i className="fas fa-plane text-blue-500 text-[8px] sm:text-[10px]"></i>
+              <span className="text-[9px] sm:text-[10px] font-bold text-blue-700">{flight.aircraft}</span>
             </div>
           )}
         </div>
       </div>
       
       {/* Animated Shine Effect on Hover */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl sm:rounded-2xl">
         <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       </div>
     </div>

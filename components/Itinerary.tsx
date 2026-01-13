@@ -141,11 +141,11 @@ const Itinerary: React.FC<ItineraryProps> = ({ itinerary, destination }) => {
   }, []);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 sm:space-y-8">
       {/* Hero Carousel - Beautiful Tourist Spots */}
-      <div className="relative rounded-3xl overflow-hidden bg-slate-900 shadow-2xl">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-2xl">
         {/* Main Carousel Image */}
-        <div className="relative h-[400px] md:h-[520px]">
+        <div className="relative h-[280px] sm:h-[400px] md:h-[520px]">
           {carouselActivities.map((item, idx) => {
             // Use picsum.photos with a seed based on index for varied but consistent fallback images
             const imgUrl = carouselImages.get(idx) || `https://picsum.photos/seed/${idx + 100}/1600/900`;
@@ -167,61 +167,61 @@ const Itinerary: React.FC<ItineraryProps> = ({ itinerary, destination }) => {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
                 
                 {/* Content on Image */}
-                <div className={`absolute inset-0 flex flex-col justify-end p-6 md:p-12 transition-all duration-500 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+                <div className={`absolute inset-0 flex flex-col justify-end p-3 sm:p-6 md:p-12 transition-all duration-500 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
                   <div className="max-w-3xl">
                     {/* Top Tags */}
-                    <div className="flex flex-wrap items-center gap-2 mb-4">
-                      <span className="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-wider border border-white/20">
-                        <i className="fas fa-calendar-day mr-2 text-blue-400"></i>
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2 sm:mb-4">
+                      <span className="px-2 py-1 sm:px-4 sm:py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white text-[9px] sm:text-xs font-black uppercase tracking-wider border border-white/20">
+                        <i className="fas fa-calendar-day mr-1 sm:mr-2 text-blue-400"></i>
                         Day {item.dayNum}
                       </span>
-                      <span className="px-4 py-1.5 bg-blue-600/80 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-wider">
-                        <i className={`fas ${getActivityIcon(item.activity.category)} mr-2`}></i>
+                      <span className="px-2 py-1 sm:px-4 sm:py-1.5 bg-blue-600/80 backdrop-blur-md rounded-full text-white text-[9px] sm:text-xs font-black uppercase tracking-wider">
+                        <i className={`fas ${getActivityIcon(item.activity.category)} mr-1 sm:mr-2`}></i>
                         {item.activity.category || 'Landmark'}
                       </span>
                       {!isFreeCost(item.activity.costEstimate) && (
-                        <span className="px-4 py-1.5 bg-emerald-600/80 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-wider">
-                          <i className="fas fa-tag mr-2"></i>
+                        <span className="px-2 py-1 sm:px-4 sm:py-1.5 bg-emerald-600/80 backdrop-blur-md rounded-full text-white text-[9px] sm:text-xs font-black uppercase tracking-wider">
+                          <i className="fas fa-tag mr-1 sm:mr-2"></i>
                           {item.activity.costEstimate}
                         </span>
                       )}
                       {isFreeCost(item.activity.costEstimate) && (
-                        <span className="px-4 py-1.5 bg-green-500/80 backdrop-blur-md rounded-full text-white text-xs font-black uppercase tracking-wider">
-                          <i className="fas fa-gift mr-2"></i>
+                        <span className="px-2 py-1 sm:px-4 sm:py-1.5 bg-green-500/80 backdrop-blur-md rounded-full text-white text-[9px] sm:text-xs font-black uppercase tracking-wider">
+                          <i className="fas fa-gift mr-1 sm:mr-2"></i>
                           Free Entry
                         </span>
                       )}
                     </div>
                     
                     {/* Main Title */}
-                    <h3 className="text-4xl md:text-6xl font-black text-white mb-4 leading-[1.1] drop-shadow-2xl">
+                    <h3 className="text-2xl sm:text-4xl md:text-6xl font-black text-white mb-2 sm:mb-4 leading-[1.1] drop-shadow-2xl">
                       {title}
                     </h3>
                     
                     {/* Description */}
-                    <p className="text-white/90 text-base md:text-lg leading-relaxed line-clamp-3 mb-6 max-w-2xl font-medium">
+                    <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-6 max-w-2xl font-medium">
                       {item.activity.description || `Discover ${title}, one of the must-visit attractions in ${destination}.`}
                     </p>
                     
                     {/* Bottom Info Row */}
-                    <div className="flex flex-wrap items-center gap-3">
-                      <div className="flex items-center gap-2 px-4 py-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
-                        <i className="fas fa-clock text-amber-400"></i>
-                        <span className="text-white text-sm font-bold">{item.activity.time || 'Best time to visit'}</span>
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-3">
+                      <div className="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2.5 bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/20">
+                        <i className="fas fa-clock text-amber-400 text-[10px] sm:text-sm"></i>
+                        <span className="text-white text-[10px] sm:text-sm font-bold">{item.activity.time || 'Best time to visit'}</span>
                       </div>
-                      <div className="flex items-center gap-2 px-4 py-2.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/20">
-                        <i className="fas fa-map-marker-alt text-rose-400"></i>
-                        <span className="text-white text-sm font-bold">{destination}</span>
+                      <div className="flex items-center gap-1 sm:gap-2 px-2 py-1.5 sm:px-4 sm:py-2.5 bg-white/10 backdrop-blur-md rounded-lg sm:rounded-xl border border-white/20">
+                        <i className="fas fa-map-marker-alt text-rose-400 text-[10px] sm:text-sm"></i>
+                        <span className="text-white text-[10px] sm:text-sm font-bold">{destination}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Slide Number Indicator */}
-                <div className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-full">
-                  <span className="text-white text-sm font-black">{idx + 1}</span>
-                  <span className="text-white/50 text-sm">/</span>
-                  <span className="text-white/70 text-sm">{carouselActivities.length}</span>
+                <div className="absolute top-3 right-3 sm:top-6 sm:right-6 flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-4 sm:py-2 bg-black/40 backdrop-blur-md rounded-full">
+                  <span className="text-white text-xs sm:text-sm font-black">{idx + 1}</span>
+                  <span className="text-white/50 text-xs sm:text-sm">/</span>
+                  <span className="text-white/70 text-xs sm:text-sm">{carouselActivities.length}</span>
                 </div>
               </div>
             );
@@ -229,27 +229,27 @@ const Itinerary: React.FC<ItineraryProps> = ({ itinerary, destination }) => {
         </div>
 
         {/* Carousel Navigation */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
+        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4 flex items-center justify-between">
           <button
             onClick={() => setCarouselIndex(prev => (prev - 1 + carouselActivities.length) % Math.max(carouselActivities.length, 1))}
-            className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-all border border-white/20"
+            className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-all border border-white/20 text-xs sm:text-base"
           >
             <i className="fas fa-chevron-left"></i>
           </button>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {carouselActivities.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCarouselIndex(idx)}
-                className={`h-2 rounded-full transition-all duration-300 ${idx === carouselIndex ? 'w-10 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${idx === carouselIndex ? 'w-6 sm:w-10 bg-white' : 'w-1.5 sm:w-2 bg-white/40 hover:bg-white/60'}`}
               />
             ))}
           </div>
 
           <button
             onClick={() => setCarouselIndex(prev => (prev + 1) % Math.max(carouselActivities.length, 1))}
-            className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-all border border-white/20"
+            className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/40 transition-all border border-white/20 text-xs sm:text-base"
           >
             <i className="fas fa-chevron-right"></i>
           </button>
@@ -257,28 +257,28 @@ const Itinerary: React.FC<ItineraryProps> = ({ itinerary, destination }) => {
       </div>
 
       {/* Trip Summary Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-2xl text-white">
-          <p className="text-blue-100 text-xs font-bold uppercase tracking-wider mb-1">Duration</p>
-          <p className="text-2xl font-black">{itinerary.length} Days</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-white">
+          <p className="text-blue-100 text-[9px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">Duration</p>
+          <p className="text-lg sm:text-2xl font-black">{itinerary.length} Days</p>
         </div>
-        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-4 rounded-2xl text-white">
-          <p className="text-emerald-100 text-xs font-bold uppercase tracking-wider mb-1">Total Spots</p>
-          <p className="text-2xl font-black">{getAllActivities(itinerary).length}</p>
+        <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-white">
+          <p className="text-emerald-100 text-[9px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">Total Spots</p>
+          <p className="text-lg sm:text-2xl font-black">{getAllActivities(itinerary).length}</p>
         </div>
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-2xl text-white">
-          <p className="text-purple-100 text-xs font-bold uppercase tracking-wider mb-1">Activity Budget</p>
-          <p className="text-2xl font-black">{formatMoney(totalTripCost.total, totalTripCost.symbol)}</p>
-          <p className="text-purple-200 text-[9px] font-bold uppercase tracking-wider mt-0.5"><i className="fas fa-user mr-1"></i>Per Person</p>
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-white">
+          <p className="text-purple-100 text-[9px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">Activity Budget</p>
+          <p className="text-lg sm:text-2xl font-black">{formatMoney(totalTripCost.total, totalTripCost.symbol)}</p>
+          <p className="text-purple-200 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider mt-0.5"><i className="fas fa-user mr-1"></i>Per Person</p>
         </div>
-        <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-4 rounded-2xl text-white">
-          <p className="text-amber-100 text-xs font-bold uppercase tracking-wider mb-1">Destination</p>
-          <p className="text-xl font-black truncate">{destination}</p>
+        <div className="bg-gradient-to-br from-amber-500 to-orange-500 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-white">
+          <p className="text-amber-100 text-[9px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">Destination</p>
+          <p className="text-base sm:text-xl font-black truncate">{destination}</p>
         </div>
       </div>
 
       {/* Compact Day-wise Itinerary */}
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         {/* Day Tabs */}
         <div className="flex overflow-x-auto border-b border-slate-100 bg-slate-50/50">
           {itinerary.map((day, idx) => {
@@ -288,14 +288,14 @@ const Itinerary: React.FC<ItineraryProps> = ({ itinerary, destination }) => {
               <button
                 key={idx}
                 onClick={() => setActiveDay(idx)}
-                className={`flex-shrink-0 px-6 py-4 flex flex-col items-center gap-1 transition-all border-b-2 ${
+                className={`flex-shrink-0 px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center gap-0.5 sm:gap-1 transition-all border-b-2 ${
                   isActive 
                     ? 'bg-white border-blue-600 text-blue-600' 
                     : 'border-transparent text-slate-400 hover:text-slate-600 hover:bg-white/50'
                 }`}
               >
-                <span className="text-xs font-bold uppercase tracking-wider">Day {day.day}</span>
-                <span className={`text-lg font-black ${isActive ? 'text-slate-900' : 'text-slate-600'}`}>
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">Day {day.day}</span>
+                <span className={`text-base sm:text-lg font-black ${isActive ? 'text-slate-900' : 'text-slate-600'}`}>
                   {formatMoney(cost.total, cost.symbol)}
                 </span>
               </button>
