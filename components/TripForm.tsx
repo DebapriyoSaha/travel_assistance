@@ -51,58 +51,58 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-10 md:p-16 bg-white rounded-[40px] transition-all duration-700 ease-in-out">
-      <div className="mb-16 text-center animate-wow">
-        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tighter leading-none">
+    <form onSubmit={handleSubmit} className="p-4 sm:p-8 md:p-16 bg-white rounded-[24px] sm:rounded-[40px] transition-all duration-700 ease-in-out">
+      <div className="mb-8 sm:mb-16 text-center animate-wow">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-3 sm:mb-4 tracking-tighter leading-none px-2">
           Define Your <span className="text-blue-600 italic serif-italic">Perfect</span> Escape
         </h2>
-        <p className="text-slate-400 text-lg font-medium max-w-2xl mx-auto">
+        <p className="text-slate-400 text-sm sm:text-base md:text-lg font-medium max-w-2xl mx-auto px-4">
           Tailor every dimension of your journey. Our AI orchestrates global data into your personal masterpiece.
         </p>
       </div>
 
-      <div className="space-y-16">
+      <div className="space-y-8 sm:space-y-16">
         {/* STEP 1: LOGISTICS */}
         <section className="animate-wow" style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center space-x-4 mb-10">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-slate-200">1</div>
+          <div className="flex items-center space-x-3 sm:space-x-4 mb-6 sm:mb-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-slate-900 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg shadow-slate-200">1</div>
             <div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">The Core Route</h3>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Where & For How Long</p>
+              <h3 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">The Core Route</h3>
+              <p className="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Where & For How Long</p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <div className="group space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-focus-within:text-blue-600 transition-colors">Origin City</label>
               <select 
                 value={source} 
                 onChange={(e) => setSource(e.target.value)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-6 py-5 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-5 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               >
                 {MAJOR_CITIES.map(city => <option key={city.code} value={city.code}>{city.name}</option>)}
               </select>
             </div>
             
-            <div className="group space-y-3">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-focus-within:text-blue-600 transition-colors">Destination</label>
               <select 
                 value={destination} 
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-6 py-5 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-5 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               >
                 {MAJOR_CITIES.map(city => <option key={city.code} value={city.code}>{city.name}</option>)}
               </select>
             </div>
 
-            <div className="group space-y-3">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-focus-within:text-blue-600 transition-colors">Journey Start Date</label>
               <input
                 type="date"
                 value={startDate}
                 min={new Date().toISOString().split('T')[0]}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-6 py-5 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-5 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               />
             </div>
 
@@ -127,8 +127,8 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
           </div>
 
           {/* Second row for currency */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-8">
-            <div className="group space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10 mt-4 sm:mt-8">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Budget Currency</label>
               <div className="flex p-1.5 bg-slate-50 rounded-2xl border-2 border-slate-50 focus-within:border-blue-100 transition-all">
                 {Object.values(Currency).map((cur) => (
@@ -150,16 +150,16 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
 
         {/* STEP 2: EXPERIENCE STYLE */}
         <section className="animate-wow" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center space-x-4 mb-10">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200">2</div>
+          <div className="flex items-center space-x-3 sm:space-x-4 mb-6 sm:mb-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg shadow-blue-200">2</div>
             <div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">The Travel Persona</h3>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tiers & Travelers</p>
+              <h3 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">The Travel Persona</h3>
+              <p className="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Tiers & Travelers</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            <div className="group space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">The Party</label>
               <div className="flex space-x-3">
                 <input
@@ -167,46 +167,46 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
                   min="1"
                   value={members}
                   onChange={(e) => setMembers(parseInt(e.target.value))}
-                  className="w-20 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-5 py-4 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                  className="w-16 sm:w-20 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-3 sm:px-5 py-3 sm:py-4 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
                 />
                 <select
                   value={groupType}
                   onChange={(e) => setGroupType(e.target.value as GroupType)}
-                  className="flex-1 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-5 py-4 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                  className="flex-1 bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-3 sm:px-5 py-3 sm:py-4 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
                 >
                   {Object.values(GroupType).map(v => <option key={v} value={v}>{v}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="group space-y-3">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Expense Tier</label>
               <select 
                 value={budget} 
                 onChange={(e) => setBudget(e.target.value as BudgetLevel)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-5 py-4 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-3 sm:px-5 py-3 sm:py-4 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               >
                 {Object.values(BudgetLevel).map(v => <option key={v} value={v}>{v}</option>)}
               </select>
             </div>
 
-            <div className="group space-y-3">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Aviation Class</label>
               <select 
                 value={flightClass} 
                 onChange={(e) => setFlightClass(e.target.value as FlightClass)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-5 py-4 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-3 sm:px-5 py-3 sm:py-4 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               >
                 {Object.values(FlightClass).map(v => <option key={v} value={v}>{v}</option>)}
               </select>
             </div>
 
-            <div className="group space-y-3">
+            <div className="group space-y-2 sm:space-y-3">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Hotel Standard</label>
               <select 
                 value={hotelRating} 
                 onChange={(e) => setHotelRating(e.target.value)}
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-2xl px-5 py-4 outline-none transition-all font-bold text-slate-700 shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-3 sm:px-5 py-3 sm:py-4 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
               >
                 <option value="Any">Any Exquisite Stay</option>
                 <option value="3">3★ & Above</option>
@@ -219,19 +219,19 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
 
         {/* STEP 3: DETAILS */}
         <section className="animate-wow" style={{ animationDelay: '0.3s' }}>
-           <div className="flex items-center space-x-4 mb-10">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-200">3</div>
+           <div className="flex items-center space-x-3 sm:space-x-4 mb-6 sm:mb-10">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg shadow-indigo-200">3</div>
             <div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">The Personal Touches</h3>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Interests & Checklists</p>
+              <h3 className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">The Personal Touches</h3>
+              <p className="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Interests & Checklists</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            <div className="space-y-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
+            <div className="space-y-6 sm:space-y-10">
               <div className="group">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-5 block">Essential Packing</label>
-                <div className="flex flex-wrap gap-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 sm:mb-5 block">Essential Packing</label>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {PACKING_ITEMS.map(item => (
                     <button
                       key={item}
@@ -250,14 +250,14 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
               </div>
 
               <div className="group">
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-5 block">Trip Logistics</label>
-                <div className="flex flex-wrap gap-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 sm:mb-5 block">Trip Logistics</label>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {ESSENTIALS_ITEMS.map(item => (
                     <button
                       key={item}
                       type="button"
                       onClick={() => toggleItem(essentials, setEssentials, item)}
-                      className={`px-5 py-3 rounded-2xl text-[11px] font-black border-2 transition-all duration-300 ${
+                      className={`px-3 py-2 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-[11px] font-black border-2 transition-all duration-300 ${
                         essentials.includes(item) 
                         ? 'bg-slate-900 border-slate-900 text-white shadow-xl translate-y-[-2px]' 
                         : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300 hover:text-slate-800'
@@ -270,12 +270,12 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
               </div>
             </div>
 
-            <div className="group space-y-4">
+            <div className="group space-y-3 sm:space-y-4">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block group-focus-within:text-blue-600 transition-colors">The Travel Manifesto</label>
               <textarea
-                rows={6}
+                rows={4}
                 placeholder="What defines your ideal day? Mention specific interests like 'authentic street food', 'brutalist architecture', or 'private sailing at sunset'..."
-                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-[32px] px-8 py-8 outline-none transition-all font-bold text-slate-700 placeholder-slate-300 leading-relaxed shadow-sm"
+                className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-[20px] sm:rounded-[32px] px-4 py-4 sm:px-8 sm:py-8 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 placeholder-slate-300 leading-relaxed shadow-sm"
                 value={activities}
                 onChange={(e) => setActivities(e.target.value)}
               />
@@ -284,22 +284,22 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
         </section>
 
         {/* SUBMIT */}
-        <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-10 animate-wow" style={{ animationDelay: '0.4s' }}>
-          <div className="text-left space-y-1">
-            <div className="flex items-center space-x-2 text-blue-600">
+        <div className="pt-8 sm:pt-16 border-t border-slate-100 flex flex-col items-center justify-between gap-6 sm:gap-10 animate-wow" style={{ animationDelay: '0.4s' }}>
+          <div className="text-center sm:text-left space-y-1 w-full">
+            <div className="flex items-center justify-center sm:justify-start space-x-2 text-blue-600">
                <i className="fas fa-check-double text-xs"></i>
                <span className="text-[10px] font-black uppercase tracking-widest">Configuration Ready</span>
             </div>
-            <p className="text-slate-900 font-black text-xl tracking-tight">Generate {days}-Day {budget} Itinerary</p>
+            <p className="text-slate-900 font-black text-lg sm:text-xl tracking-tight">Generate {days}-Day {budget} Itinerary</p>
           </div>
           
           <button
             type="submit"
             disabled={isLoading}
-            className="group relative w-full md:w-auto overflow-hidden bg-slate-900 hover:bg-black text-white rounded-[28px] py-6 px-16 font-black text-xl transition-all shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.4)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+            className="group relative w-full overflow-hidden bg-slate-900 hover:bg-black text-white rounded-[20px] sm:rounded-[28px] py-4 px-8 sm:py-6 sm:px-16 font-black text-base sm:text-xl transition-all shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="flex items-center justify-center space-x-4 relative z-10">
+            <div className="flex items-center justify-center space-x-3 sm:space-x-4 relative z-10">
               {isLoading ? (
                 <i className="fas fa-circle-notch fa-spin"></i>
               ) : (

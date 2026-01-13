@@ -50,11 +50,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-12 sm:pb-24">
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10">
-        <div className="space-y-6">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 -mt-16 sm:-mt-24 relative z-10">
+        <div className="space-y-4 sm:space-y-6">
           <section className="bg-white/95 backdrop-blur-xl rounded-[40px] shadow-[0_30px_100px_rgba(0,0,0,0.15)] overflow-hidden border border-white/50 no-print transform hover:shadow-[0_40px_120px_rgba(0,0,0,0.2)] transition-all duration-500">
             <TripForm onPlan={handlePlanTrip} isLoading={loading} />
           </section>
@@ -97,12 +97,12 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="mt-32 py-16 border-t border-slate-200 text-center no-print bg-gradient-to-b from-transparent to-slate-50">
-        <div className="flex items-center justify-center space-x-3 mb-4">
-          <i className="fas fa-paper-plane text-blue-500 text-xl"></i>
-          <span className="font-black text-slate-900 tracking-tighter text-2xl">SkyBound<span className="text-blue-500">AI</span></span>
+      <footer className="mt-16 sm:mt-32 py-8 sm:py-16 border-t border-slate-200 text-center no-print bg-gradient-to-b from-transparent to-slate-50">
+        <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
+          <i className="fas fa-paper-plane text-blue-500 text-lg sm:text-xl"></i>
+          <span className="font-black text-slate-900 tracking-tighter text-xl sm:text-2xl">SkyBound<span className="text-blue-500">AI</span></span>
         </div>
-        <p className="text-slate-400 font-medium">© 2026 SkyBound Travel Intelligence. Professional Itinerary Architecture.</p>
+        <p className="text-slate-400 font-medium text-xs sm:text-base px-4">© 2026 SkyBound Travel Intelligence. Professional Itinerary Architecture.</p>
         <a 
           href="https://www.linkedin.com/in/debapriyo-saha/" 
           target="_blank" 
