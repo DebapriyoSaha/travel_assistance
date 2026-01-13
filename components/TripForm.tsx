@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GroupType, BudgetLevel, FlightClass, Currency, MAJOR_CITIES } from '../types';
 
 interface TripFormProps {
@@ -18,6 +18,12 @@ const ESSENTIALS_ITEMS = [
 const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
   const [source, setSource] = useState('JFK');
   const [destination, setDestination] = useState('LHR');
+  const [sourceInput, setSourceInput] = useState('New York, United States (JFK)');
+  const [destInput, setDestInput] = useState('London, United Kingdom (LHR)');
+  const [showSourceSuggestions, setShowSourceSuggestions] = useState(false);
+  const [showDestSuggestions, setShowDestSuggestions] = useState(false);
+  const sourceRef = useRef<HTMLDivElement>(null);
+  const destRef = useRef<HTMLDivElement>(null);
   const [members, setMembers] = useState(2);
   const [days, setDays] = useState(4);
   const [startDate, setStartDate] = useState(() => {
@@ -33,6 +39,45 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
   const [activities, setActivities] = useState('');
   const [packingList, setPackingList] = useState<string[]>([]);
   const [essentials, setEssentials] = useState<string[]>([]);
+
+  // Filter cities based on input
+  const getFilteredCities = (input: string) => {
+    const search = input.toLowerCase().trim();
+    if (!search) return MAJOR_CITIES.slice(0, 10);
+    return MAJOR_CITIES.filter(city => 
+      city.name.toLowerCase().includes(search) || 
+      city.code.toLowerCase().includes(search)
+    ).slice(0, 10);
+  };
+
+  const sourceSuggestions = getFilteredCities(sourceInput);
+  const destSuggestions = getFilteredCities(destInput);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sourceRef.current && !sourceRef.current.contains(e.target as Node)) {
+        setShowSourceSuggestions(false);
+      }
+      if (destRef.current && !destRef.current.contains(e.target as Node)) {
+        setShowDestSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectSource = (city: typeof MAJOR_CITIES[0]) => {
+    setSource(city.code);
+    setSourceInput(city.name);
+    setShowSourceSuggestions(false);
+  };
+
+  const selectDest = (city: typeof MAJOR_CITIES[0]) => {
+    setDestination(city.code);
+    setDestInput(city.name);
+    setShowDestSuggestions(false);
+  };
 
   const toggleItem = (list: string[], setList: (l: string[]) => void, item: string) => {
     if (list.includes(item)) {
@@ -73,26 +118,66 @@ const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
-            <div className="group space-y-2 sm:space-y-3">
+            {/* Source Autocomplete */}
+            <div className="group space-y-2 sm:space-y-3 relative" ref={sourceRef}>
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-focus-within:text-blue-600 transition-colors">Origin City</label>
-              <select 
-                value={source} 
-                onChange={(e) => setSource(e.target.value)}
+              <input
+                type="text"
+                value={sourceInput}
+                onChange={(e) => {
+                  setSourceInput(e.target.value);
+                  setShowSourceSuggestions(true);
+                }}
+                onFocus={() => setShowSourceSuggestions(true)}
+                placeholder="Type city name or code..."
                 className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-5 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
-              >
-                {MAJOR_CITIES.map(city => <option key={city.code} value={city.code}>{city.name}</option>)}
-              </select>
+              />
+              {showSourceSuggestions && sourceSuggestions.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border-2 border-blue-200 rounded-xl sm:rounded-2xl shadow-xl max-h-64 overflow-y-auto">
+                  {sourceSuggestions.map(city => (
+                    <button
+                      key={city.code}
+                      type="button"
+                      onClick={() => selectSource(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-0"
+                    >
+                      <div className="font-bold text-slate-900 text-sm">{city.name}</div>
+                      <div className="text-xs text-slate-500 font-medium">{city.code}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             
-            <div className="group space-y-2 sm:space-y-3">
+            {/* Destination Autocomplete */}
+            <div className="group space-y-2 sm:space-y-3 relative" ref={destRef}>
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 group-focus-within:text-blue-600 transition-colors">Destination</label>
-              <select 
-                value={destination} 
-                onChange={(e) => setDestination(e.target.value)}
+              <input
+                type="text"
+                value={destInput}
+                onChange={(e) => {
+                  setDestInput(e.target.value);
+                  setShowDestSuggestions(true);
+                }}
+                onFocus={() => setShowDestSuggestions(true)}
+                placeholder="Type city name or code..."
                 className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 focus:bg-white rounded-xl sm:rounded-2xl px-4 py-3 sm:px-6 sm:py-5 outline-none transition-all font-bold text-sm sm:text-base text-slate-700 shadow-sm"
-              >
-                {MAJOR_CITIES.map(city => <option key={city.code} value={city.code}>{city.name}</option>)}
-              </select>
+              />
+              {showDestSuggestions && destSuggestions.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border-2 border-blue-200 rounded-xl sm:rounded-2xl shadow-xl max-h-64 overflow-y-auto">
+                  {destSuggestions.map(city => (
+                    <button
+                      key={city.code}
+                      type="button"
+                      onClick={() => selectDest(city)}
+                      className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-0"
+                    >
+                      <div className="font-bold text-slate-900 text-sm">{city.name}</div>
+                      <div className="text-xs text-slate-500 font-medium">{city.code}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="group space-y-2 sm:space-y-3">
