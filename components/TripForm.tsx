@@ -16,10 +16,10 @@ const ESSENTIALS_ITEMS = [
 ];
 
 const TripForm: React.FC<TripFormProps> = ({ onPlan, isLoading }) => {
-  const [source, setSource] = useState('JFK');
-  const [destination, setDestination] = useState('LHR');
-  const [sourceInput, setSourceInput] = useState('New York, United States (JFK)');
-  const [destInput, setDestInput] = useState('London, United Kingdom (LHR)');
+  const [source, setSource] = useState('');
+  const [destination, setDestination] = useState('');
+  const [sourceInput, setSourceInput] = useState('');
+  const [destInput, setDestInput] = useState('');
   const [showSourceSuggestions, setShowSourceSuggestions] = useState(false);
   const [showDestSuggestions, setShowDestSuggestions] = useState(false);
   const sourceRef = useRef<HTMLDivElement>(null);
