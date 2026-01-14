@@ -113,10 +113,11 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
   // Calculate flight cost per person (price shown is per person for one way)
   const flightCostPerPerson = useMemo(() => {
     if (!data.flights?.length) return 0;
-    // The price breakup total is per person for one-way
-    const oneWayFarePerPerson = parseCostValue(data.flights[0]?.priceBreakup?.total);
-    // Round trip = 2 × one-way per person
-    return oneWayFarePerPerson * 2;
+    // The price breakup total is typically per person for one-way.
+    const outbound = parseCostValue(data.flights[0]?.priceBreakup?.total);
+    const inbound = data.returnFlights?.[0] ? parseCostValue(data.returnFlights[0]?.priceBreakup?.total) : 0;
+    // If inbound exists, use outbound+inbound; otherwise estimate round-trip as 2×outbound
+    return inbound > 0 ? outbound + inbound : outbound * 2;
   }, [data.flights]);
 
   // Calculate hotel cost (per room per night - rooms are shared)
@@ -151,13 +152,10 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
     // Activities: per person × number of travelers
     const activitiesTotal = totalActivityCostPerPerson * members;
     
-    // Use LLM's total cost estimate as the primary budget (it considers budget tier, flight class, hotel standard)
-    // Fall back to calculated total if LLM estimate is not available
-    const llmTotal = parseCostValue(data.tripPlan.totalCostEstimate);
+    // Calculate explicit totals: flights + hotels + activities (LLM estimate reported separately)
     const calculatedTotal = flightsTotal + hotelsTotal + activitiesTotal;
-    
-    // Use LLM estimate if it's a reasonable value, otherwise use calculated
-    const grandTotal = llmTotal > 0 ? llmTotal : calculatedTotal;
+    const llmTotal = parseCostValue(data.tripPlan.totalCostEstimate);
+    const grandTotal = calculatedTotal;
     const perPerson = members > 0 ? grandTotal / members : grandTotal;
     
     return {
@@ -172,7 +170,7 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
       hotelsPerNight: hotelCostPerNight,
       activitiesPerPerson: totalActivityCostPerPerson,
       llmEstimate: llmTotal,
-      isLlmBased: llmTotal > 0
+      isLlmBased: false
     };
   }, [flightCostPerPerson, hotelCostPerNight, totalActivityCostPerPerson, data.tripPlan.members, data.tripPlan.durationDays, data.tripPlan.totalCostEstimate]);
 
