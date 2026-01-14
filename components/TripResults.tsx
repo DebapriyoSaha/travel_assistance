@@ -267,72 +267,14 @@ const TripResults: React.FC<TripResultsProps> = ({ data }) => {
     
     setIsGeneratingPdf(true);
     
-    try {
-      // Get the print-only section
-      const printSection = document.querySelector('.print-only') as HTMLElement;
-      if (!printSection) {
-        window.print();
-        return;
-      }
-
-      // Temporarily show the print section
-      const originalDisplay = printSection.style.display;
-      printSection.style.display = 'block';
-      printSection.classList.remove('hidden');
-
-      // Wait for styles to apply
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      // Generate canvas from the print section
-      const canvas = await html2canvas(printSection, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        width: printSection.scrollWidth,
-        height: printSection.scrollHeight,
-      });
-
-      // Calculate PDF dimensions (A4 size)
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      // Create PDF
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Add more pages if needed
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      // Generate filename
-      const fileName = `SkyBound_${destinationName.replace(/\s+/g, '_')}_${data.tripPlan.durationDays}Days_Trip.pdf`;
-      
-      // Download PDF
-      pdf.save(fileName);
-
-      // Restore print section visibility
-      printSection.style.display = originalDisplay;
-      printSection.classList.add('hidden');
-      
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      // Fallback to print dialog
-      window.print();
-    } finally {
+    // Use the browser's native print dialog which perfectly handles the print-only styles
+    // Users can save as PDF from there
+    window.print();
+    
+    // Reset state after a short delay
+    setTimeout(() => {
       setIsGeneratingPdf(false);
-    }
+    }, 500);
   };
 
   // Get day cost helper

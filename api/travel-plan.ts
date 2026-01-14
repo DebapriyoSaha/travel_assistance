@@ -291,8 +291,8 @@ Create an ELITE travel itinerary from ${sourceCity} (${source}) to ${destination
 Budget: ${budgetLevel}. Flight Class: ${flightClass}. Currency: ${currency}.
 Duration: ${days} days.
 Hotel Standard: ${hotelRating}.
-Must consider: ${Array.isArray(essentials) && essentials.length ? essentials.join(', ') : 'standard travel essentials'}.
-Packing focus: ${Array.isArray(packingList) && packingList.length ? packingList.join(', ') : 'standard packing list'}.
+${Array.isArray(essentials) && essentials.length ? `Must consider: ${essentials.join(', ')}.` : 'GENERATE APPROPRIATE TRAVEL ESSENTIALS: Create a concise list of 5-7 CRITICAL essential items specific to this trip (focus on: visa/passport requirements, vaccinations, travel insurance, local SIM/connectivity, power adapters, currency/payment tips, and one cultural/safety note).'}
+${Array.isArray(packingList) && packingList.length ? `Packing focus: ${packingList.join(', ')}.` : 'GENERATE DYNAMIC PACKING LIST: Create a curated list of 8-10 ESSENTIAL packing items tailored to the destination climate, season, and key activities. Be specific and practical (e.g., "Lightweight rain jacket" instead of "Rain gear").'}
 Interests: ${activities || 'Major landmarks, top-rated local dining, and cultural hidden gems'}.
 
 ITINERARY DEPTH REQUIREMENT (VERY IMPORTANT):
@@ -316,25 +316,6 @@ COST ACCURACY REQUIREMENT (VERY IMPORTANT):
 - Be realistic - use actual 2024/2025 prices for the destination matching ${budgetLevel} tier.
 - If an activity is free, explicitly write "Free" or "₹0 (free entry)".
 
-FLIGHT CLASS PRICING (CRITICAL - ALL FLIGHTS MUST USE ${flightClass} CLASS FARES):
-The user has selected "${flightClass}" class. ALL flight prices MUST reflect ${flightClass} class fares:
-${flightClass === 'Economy' ? `
-- ECONOMY CLASS PRICING:
-  * Short-haul (under 3 hours): $80-200 or ₹6,000-15,000 per person one-way
-  * Medium-haul (3-6 hours): $150-400 or ₹12,000-30,000 per person one-way
-  * Long-haul (6+ hours): $300-800 or ₹25,000-65,000 per person one-way
-  * Use budget airlines like IndiGo, SpiceJet, AirAsia, Ryanair, etc.` : flightClass === 'Business' ? `
-- BUSINESS CLASS PRICING:
-  * Short-haul (under 3 hours): $400-800 or ₹30,000-60,000 per person one-way
-  * Medium-haul (3-6 hours): $800-2,000 or ₹65,000-1,60,000 per person one-way
-  * Long-haul (6+ hours): $1,500-5,000 or ₹1,20,000-4,00,000 per person one-way
-  * Use premium airlines like Emirates, Singapore Airlines, Lufthansa, etc.` : `
-- FIRST CLASS PRICING:
-  * Short-haul (under 3 hours): $800-1,500 or ₹65,000-1,20,000 per person one-way
-  * Medium-haul (3-6 hours): $1,500-4,000 or ₹1,20,000-3,20,000 per person one-way
-  * Long-haul (6+ hours): $4,000-15,000 or ₹3,20,000-12,00,000 per person one-way
-  * Use luxury airlines like Emirates First, Singapore Suites, Etihad Apartments, etc.`}
-
 BUDGET TIER & HOTEL PRICING GUIDELINES:
 Budget Tier: ${budgetLevel}
 ${budgetLevel === 'Economy' ? `- ECONOMY: 2-3 star hotels ($30-80/night or ₹2,500-6,000/night), street food & casual dining.` : budgetLevel === 'Standard' ? `- STANDARD: 3-4 star hotels ($80-180/night or ₹6,000-15,000/night), mid-range restaurants.` : `- LUXURY: 5-star luxury hotels ($200-500/night or ₹15,000-40,000/night), fine dining restaurants.`}
@@ -343,33 +324,28 @@ Hotel Standard: ${hotelRating} - prices MUST reflect this rating level.
 
 TOTAL COST CALCULATION (CRITICAL - FOLLOW THIS FORMULA):
 Calculate tripPlan.totalCostEstimate accurately as:
-1. FLIGHTS: (${flightClass} class one-way fare × 2 for round trip) × ${members} travelers
-2. HOTELS: (${hotelRating} hotel per night × ${nights} nights) × ${roomsNeeded} room${roomsNeeded > 1 ? 's' : ''}
-3. ACTIVITIES: Sum of all daily activity costs × ${members} travelers
+1. FLIGHTS: Use the real-time flight price provided above (already calculated for all travelers)
+2. HOTELS: (${hotelRating} hotel per night * ${nights} nights) * ${roomsNeeded} room${roomsNeeded > 1 ? 's' : ''}
+3. ACTIVITIES: Sum of all daily activity costs * ${members} travelers
 4. BUFFER: Add 10% for miscellaneous expenses
-
-IMPORTANT: Flight fares MUST be ${flightClass} class fares, NOT economy fares!
 
 Format: "₹X,XX,XXX" or "$X,XXX" (use proper Indian/US number formatting).
 The total MUST reflect the selected ${flightClass} flight class and ${budgetLevel} budget tier accurately.
 
 RESULT COUNT REQUIREMENT (STRICT):
-- Return 3-4 ONWARD flight options in "flights" array (from ${sourceCity} to ${destinationCity}) - ALL must be ${flightClass} CLASS fares.
-- Return 3-4 RETURN flight options in "returnFlights" array (from ${destinationCity} back to ${sourceCity}) - ALL must be ${flightClass} CLASS fares.
 - Return between 3 and 4 hotel options in "hotels".
+- NOTE: Flight data is fetched from real-time APIs and will be added automatically - do NOT generate flight arrays.
 
 OUTPUT FORMAT (STRICT):
 Return a SINGLE JSON object ONLY (no markdown) with this top-level shape:
 {
-  "flights": [ { "airline": "", "flightNumber": "", "departureTime": "", "arrivalTime": "", "duration": "", "priceBreakup": { "base": "", "taxes": "", "total": "" } } ],
-  "returnFlights": [ { "airline": "", "flightNumber": "", "departureTime": "", "arrivalTime": "", "duration": "", "priceBreakup": { "base": "", "taxes": "", "total": "" } } ],
   "hotels": [ { "name": "", "rating": "", "pricePerNight": "", "description": "", "amenities": [""] } ],
   "bestTimeToVisit": {
-    "months": "e.g. October to March",
-    "season": "e.g. Winter/Dry Season",
-    "weather": "e.g. Pleasant 20-28°C, low humidity",
-    "crowdLevel": "e.g. Moderate to High (peak tourist season)",
-    "tip": "e.g. Book accommodations 2-3 months in advance for best rates"
+    "months": "Specific months range (e.g., 'October to March', 'June to September')",
+    "season": "Local season name relevant to ${destinationCity} (e.g., 'Cherry Blossom Season', 'Monsoon Season', 'Dry Winter', 'Summer Festival Season')",
+    "weather": "Specific temperature range and conditions for ${destinationCity} during these months (e.g., '15-25°C, clear skies', '28-35°C with afternoon showers')",
+    "crowdLevel": "Be SPECIFIC about crowds for ${destinationCity} during this period (e.g., 'Very High - peak tourist season', 'Low - off-season bargains', 'Moderate - shoulder season')",
+    "tip": "ONE practical, destination-specific tip for visiting ${destinationCity} during this time (e.g., 'Book Taj Mahal tickets 2 weeks ahead', 'Avoid Lunar New Year crowds', 'Carry umbrella for afternoon rains')"
   },
   "tripPlan": {
     "destination": "",
@@ -381,8 +357,8 @@ Return a SINGLE JSON object ONLY (no markdown) with this top-level shape:
     "members": ${members},
     "durationDays": ${days},
     "totalCostEstimate": "",
-    "selectedPackingList": ${JSON.stringify(packingList || [])},
-    "selectedEssentials": ${JSON.stringify(essentials || [])},
+    "selectedPackingList": ${Array.isArray(packingList) && packingList.length ? JSON.stringify(packingList) : '["(8-10 essential items)"]'},
+    "selectedEssentials": ${Array.isArray(essentials) && essentials.length ? JSON.stringify(essentials) : '["(5-7 critical logistics)"]'},
     "itinerary": [
       {
         "day": 1,
@@ -421,6 +397,10 @@ WIKIPEDIA TITLE INSTRUCTION (STRICT):
 - For every activity, set "wikipediaTitle" to the exact English Wikipedia page title for the primary place/landmark in that activity.
 - Example: "Eiffel Tower", "Gateway of India", "British Museum".
 - If you cannot confidently identify the exact page title, set "wikipediaTitle" to an empty string.
+
+PACKING & ESSENTIALS INSTRUCTION:
+${Array.isArray(packingList) && packingList.length ? '- Use the user-provided packing list items.' : '- Generate a CONCISE packing list (8-10 must-have items ONLY) based on: destination climate, ${days}-day duration, ${groupType} group type, and key activities. Focus on essentials: 2-3 clothing items, 1-2 footwear, key accessories, and must-have electronics/documents. Be specific (e.g., "Sunscreen SPF 50+" not "Sun protection").'}
+${Array.isArray(essentials) && essentials.length ? '- Use the user-provided travel essentials.' : '- Generate CRITICAL travel logistics (5-7 items ONLY) specific to ${destinationCity}: visa/passport needs, required vaccinations, travel insurance note, local payment methods, SIM/internet option, one cultural etiquette tip, one safety consideration. Be destination-specific and actionable.'}
 ${flightPriceInfo}
 `.trim();
 }
@@ -517,14 +497,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     travelData.tripPlan.startDate = startDate;
     travelData.tripPlan.returnDate = returnDate;
 
-    const userPackingList = Array.isArray(params?.packingList) ? params.packingList : [];
-    const userEssentials = Array.isArray(params?.essentials) ? params.essentials : [];
+    const userPackingList = Array.isArray(params?.packingList) && params.packingList.length > 0 ? params.packingList : [];
+    const userEssentials = Array.isArray(params?.essentials) && params.essentials.length > 0 ? params.essentials : [];
     
-    if (!Array.isArray(travelData.tripPlan.selectedPackingList) || travelData.tripPlan.selectedPackingList.length === 0) {
+    // If user provided selections, use them; otherwise use LLM-generated ones
+    if (userPackingList.length > 0) {
       travelData.tripPlan.selectedPackingList = userPackingList;
+    } else if (!Array.isArray(travelData.tripPlan.selectedPackingList) || travelData.tripPlan.selectedPackingList.length === 0) {
+      travelData.tripPlan.selectedPackingList = [];
     }
-    if (!Array.isArray(travelData.tripPlan.selectedEssentials) || travelData.tripPlan.selectedEssentials.length === 0) {
+    
+    if (userEssentials.length > 0) {
       travelData.tripPlan.selectedEssentials = userEssentials;
+    } else if (!Array.isArray(travelData.tripPlan.selectedEssentials) || travelData.tripPlan.selectedEssentials.length === 0) {
+      travelData.tripPlan.selectedEssentials = [];
     }
 
     // Normalize itinerary data
